@@ -128,17 +128,14 @@ const App = () => {
     }
   };
 
-  // 根據 PDF 內容更新的真實案例與網路授權圖片
   const portfolioData = [
-    { id: 1, title: 'RO仙境傳說：世界之旅', category: 'game', desc: '網紅直播與公會經營，首日開服突破百萬觀看', image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800' },
-    { id: 2, title: 'Sainderma (巴黎頂級護膚)', category: 'brand', desc: '小紅書與 IG 行銷跨國品牌推廣', image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&q=80&w=800' },
-    { id: 3, title: '老協珍 人蔘精', category: 'brand', desc: '邀請亞洲天王郭富城代言，港台熱銷突破百萬樽', image: 'https://images.unsplash.com/photo-1584362917165-526a968579e8?auto=format&fit=crop&q=80&w=800' },
-    { id: 4, title: '法國五月藝術節 (French May)', category: 'event', desc: '大型文化活動曝光與線上線下整合推廣', image: 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=800' },
-    { id: 5, title: '《數碼龐克號》', category: 'event', desc: '香港設計中心 KOL 導流與活動擴散', image: 'https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?auto=format&fit=crop&q=80&w=800' },
-    { id: 6, title: 'State of Survival 全面屍控', category: 'game', desc: '電視廣告、網紅合作影片及微辣贊助影片', image: 'https://images.unsplash.com/photo-1533282960533-51328aa26bb2?auto=format&fit=crop&q=80&w=800' },
-    { id: 7, title: '關懷愛滋 AIDS Concern', category: 'ngo', desc: '非牟利組織反歧視宣傳片拍攝與理念推廣', image: 'https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&q=80&w=800' },
-    { id: 8, title: '傑志足球隊 (Kitchee)', category: 'ngo', desc: '球隊周邊商品、海報與服裝視覺設計', image: 'https://images.unsplash.com/photo-1518605368461-1ee7e53f20f2?auto=format&fit=crop&q=80&w=800' },
-    { id: 9, title: '命運聖契：少女的羈絆', category: 'game', desc: '台日韓 KOL 聯合推廣與代言人活動統籌', image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=800' },
+    { id: 1, title: '法國五月藝術節 (French May)', category: 'event', desc: '大型文化活動曝光與線上線下整合推廣', image: 'bg-blue-100' },
+    { id: 2, title: '《數碼龐克號》', category: 'event', desc: '香港設計中心 KOL 導流與活動擴散', image: 'bg-purple-100' },
+    { id: 3, title: 'Sainderma (巴黎頂級護膚)', category: 'brand', desc: '小紅書與 IG 行銷跨國品牌推廣', image: 'bg-pink-100' },
+    { id: 4, title: '老協珍', category: 'brand', desc: '知名保健品牌代言人全方位推廣', image: 'bg-orange-100' },
+    { id: 5, title: 'Dia Reale', category: 'brand', desc: '鑽石品牌節慶包裝與 SEO/SEM 操作', image: 'bg-slate-100' },
+    { id: 6, title: '傑志足球隊 (Kitchee)', category: 'ngo', desc: '球隊周邊商品、海報與服裝視覺設計', image: 'bg-green-100' },
+    { id: 7, title: '愛滋病反歧視宣傳', category: 'ngo', desc: '非牟利組織宣傳片拍攝與理念推廣', image: 'bg-red-100' },
   ];
 
   const filteredPortfolio = activeFilter === 'all' 
@@ -191,21 +188,15 @@ const App = () => {
         )}
       </nav>
 
-      {/* 首屏 Hero Section - 使用高畫質攝影棚/製作團隊示意圖 */}
+      {/* 首屏 Hero Section */}
       <section id="home" className="relative pt-20 pb-32 lg:pt-32 lg:pb-48 overflow-hidden bg-slate-900">
-        <div className="absolute inset-0 opacity-40">
-          <img 
-            src="https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?auto=format&fit=crop&q=80&w=2000" 
-            alt="" 
-            className="w-full h-full object-cover mix-blend-overlay"
-          />
-        </div>
+        <div className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1558442074-3c19857bc1dc?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center mix-blend-overlay"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
           <div className="max-w-3xl">
             <div className="inline-block px-4 py-1.5 rounded-full bg-orange-500/20 text-orange-400 font-semibold text-sm mb-6 border border-orange-500/30">
-              The Agency of Actions
+              The Action Agency
             </div>
             <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight mb-6">
               行動機構<br />
@@ -214,7 +205,7 @@ const App = () => {
               </span>
             </h1>
             <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl leading-relaxed">
-              一站式全方位整合與媒體採購。從概念發想、跨國在地化測試到高階媒體投放，我們助您精準切入中港台與東南亞市場。
+              一站式全方位整合與媒體採購。從概念發想、跨國在地化測試到高階媒體投放，我們助您精準切入亞洲市場，讓想像成真。
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <a href="#contact" className="inline-flex justify-center items-center px-8 py-4 text-base font-bold rounded-full text-white bg-orange-600 hover:bg-orange-700 transition-all shadow-lg hover:shadow-orange-600/30">
@@ -254,9 +245,9 @@ const App = () => {
               <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Globe2 className="text-blue-600 w-7 h-7" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">佈局全亞洲市場？</h3>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">拓展雙港台市場？</h3>
               <p className="text-slate-600 leading-relaxed">
-                除了中港台三地團隊外，我們更於<strong className="text-slate-800">馬來西亞與泰國</strong>設立營運據點，專為東南亞市場提供最「在地化」的創意與產品測試。
+                香港唯一在台設立實體辦公室的廣告公司。<strong className="text-slate-800">港台雙總部無縫接軌</strong>，專為亞洲市場提供最「在地化」的創意與產品測試。
               </p>
             </div>
 
@@ -267,7 +258,7 @@ const App = () => {
               </div>
               <h3 className="text-xl font-bold text-slate-900 mb-3">線上線下太零碎？</h3>
               <p className="text-slate-600 leading-relaxed">
-                多個代理商難以管理？公司內設行銷、美術、製作及產品部，從<strong className="text-slate-800">大型戶外 LED 廣告到 KOL 直播</strong>，我們為您一站式全包。
+                多個代理商難以管理？公司內設行銷、美術、製作及產品部，從<strong className="text-slate-800">戶外大型廣告到 KOL 社群操作</strong>，我們為您一站式全包。
               </p>
             </div>
           </div>
@@ -337,14 +328,13 @@ const App = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">實力見證：成功案例</h2>
-            <p className="text-slate-600 text-lg">跨足遊戲、快消、文化與非牟利等多元產業，展現全方位整合實力。</p>
+            <p className="text-slate-600 text-lg">跨足文化、快消、運動等多元產業，展現全方位整合實力。</p>
           </div>
 
           {/* Filters */}
           <div className="flex flex-wrap justify-center gap-3 mb-12">
             {[
               { id: 'all', label: '全部作品' },
-              { id: 'game', label: '遊戲發行與推廣' },
               { id: 'event', label: '大型文化活動' },
               { id: 'brand', label: '品牌跨國推廣' },
               { id: 'ngo', label: '運動與非牟利' },
@@ -363,19 +353,19 @@ const App = () => {
             ))}
           </div>
 
-          {/* Grid - 替換為真實圖片 */}
+          {/* Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPortfolio.map(item => (
-              <div key={item.id} className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100 flex flex-col">
-                <div className="h-48 flex items-center justify-center relative overflow-hidden bg-slate-100">
-                  <img 
-                    src={item.image} 
-                    alt={``} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-slate-900/0 transition-colors duration-500"></div>
+              <div key={item.id} className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100">
+                {/* 模擬圖片區塊 */}
+                <div className={`h-48 ${item.image} flex items-center justify-center relative overflow-hidden`}>
+                  <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-transparent transition-colors"></div>
+                  <span className="text-slate-500 font-medium text-sm flex flex-col items-center">
+                    <Video className="w-8 h-8 mb-2 opacity-50" />
+                    [專案視覺圖: {item.title}]
+                  </span>
                 </div>
-                <div className="p-6 flex-1 flex flex-col justify-center">
+                <div className="p-6">
                   <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-orange-600 transition-colors">{item.title}</h3>
                   <p className="text-slate-600 text-sm line-clamp-2">{item.desc}</p>
                 </div>
@@ -387,7 +377,7 @@ const App = () => {
           <div className="mt-24 pt-16 border-t border-slate-200">
             <p className="text-center text-sm font-semibold text-slate-500 tracking-wider mb-8 uppercase">合作客戶與信賴品牌</p>
             <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-              {['miHoYo', 'Sainderma', 'Godiva', '老協珍', '海洋公園', '中信銀行'].map((logo, idx) => (
+              {['Godiva', '大家樂', 'Boots', '海洋公園', '中信銀行'].map((logo, idx) => (
                 <div key={idx} className="text-xl font-black text-slate-400">
                   {logo}
                 </div>
@@ -404,14 +394,10 @@ const App = () => {
             <div className="mb-12 lg:mb-0 relative">
               <div className="aspect-square rounded-full bg-orange-50 absolute -top-12 -left-12 w-64 h-64 -z-10"></div>
               <div className="bg-slate-100 rounded-3xl h-96 w-full flex items-center justify-center relative overflow-hidden shadow-lg">
-                <img 
-                  src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80&w=1000" 
-                  alt="" 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur p-6 rounded-2xl shadow-xl">
-                   <p className="font-bold text-slate-900 text-lg mb-1">自 2006 年深耕至今</p>
-                   <p className="text-orange-600 font-medium text-sm">串聯 香港、台灣、馬來西亞、泰國</p>
+                <span className="text-slate-400 font-medium">[團隊合照/辦公室實景圖]</span>
+                <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur p-6 rounded-2xl shadow-xl">
+                   <p className="font-bold text-slate-900 text-lg mb-1">成立於 2006 年</p>
+                   <p className="text-orange-600 font-medium">中港台三地零時差團隊優勢</p>
                 </div>
               </div>
             </div>
@@ -419,7 +405,7 @@ const App = () => {
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">關於 ACT MEDIA</h2>
               <p className="text-slate-600 text-lg leading-relaxed mb-8">
-                ACT MEDIA 戶動媒體不僅是一間廣告代理商，更是您品牌「行動派的戰略夥伴」。自 2006 年於香港成立，陸續在台灣 (2014)、馬來西亞 (2015)、泰國 (2016) 設立營運據點。內部完善的四大部門架構，確保每一個創意都能被精準執行。
+                ACT MEDIA 戶動媒體深耕廣告領域十餘載。我們不僅是一間廣告代理商，更是您品牌「行動派的戰略夥伴」。內部完善的四大部門架構，確保每一個創意都能被精準執行、完美落地。
               </p>
               
               <div className="space-y-6">
@@ -427,28 +413,28 @@ const App = () => {
                   <div className="flex-shrink-0 mt-1"><div className="w-2 h-2 rounded-full bg-orange-600"></div></div>
                   <div className="ml-4">
                     <h4 className="text-lg font-bold text-slate-900">行銷部 (Marketing)</h4>
-                    <p className="text-slate-600 text-sm mt-1">精準市場定位，數據驅動行銷策略制定與跨國媒體採購。</p>
+                    <p className="text-slate-600 text-sm mt-1">精準市場定位，數據驅動行銷策略制定。</p>
                   </div>
                 </div>
                 <div className="flex">
                   <div className="flex-shrink-0 mt-1"><div className="w-2 h-2 rounded-full bg-orange-600"></div></div>
                   <div className="ml-4">
                     <h4 className="text-lg font-bold text-slate-900">美術部 (Art & Design)</h4>
-                    <p className="text-slate-600 text-sm mt-1">深諳在地化視覺語彙，為客戶設計各類適合推廣的素材。</p>
+                    <p className="text-slate-600 text-sm mt-1">深諳在地化視覺語彙，打造吸睛品牌形象。</p>
                   </div>
                 </div>
                 <div className="flex">
                   <div className="flex-shrink-0 mt-1"><div className="w-2 h-2 rounded-full bg-orange-600"></div></div>
                   <div className="ml-4">
                     <h4 className="text-lg font-bold text-slate-900">製作部 (Production)</h4>
-                    <p className="text-slate-600 text-sm mt-1">強大硬體支援，從錄音、直播到高規格本土化影音拍攝。</p>
+                    <p className="text-slate-600 text-sm mt-1">強大硬體支援，從錄音、直播到高規格影音拍攝。</p>
                   </div>
                 </div>
                 <div className="flex">
                   <div className="flex-shrink-0 mt-1"><div className="w-2 h-2 rounded-full bg-orange-600"></div></div>
                   <div className="ml-4">
                     <h4 className="text-lg font-bold text-slate-900">產品部 (Product)</h4>
-                    <p className="text-slate-600 text-sm mt-1">專責產品測試、社群風向調研，降低跨國市場試錯成本。</p>
+                    <p className="text-slate-600 text-sm mt-1">社群風向測試與產品在地化調研，降低試錯成本。</p>
                   </div>
                 </div>
               </div>
@@ -536,31 +522,24 @@ const App = () => {
                 留下您的需求，我們的專業團隊將在 24 小時內與您聯繫，提供專屬的整合行銷提案。
               </p>
 
-              <div className="space-y-6">
-                <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700">
-                  <h4 className="text-orange-400 font-bold mb-3 flex items-center">
+              <div className="space-y-8">
+                <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+                  <h4 className="text-orange-400 font-bold mb-4 flex items-center">
                     <MapPin className="w-5 h-5 mr-2" /> 香港總部 (HQ)
                   </h4>
                   <p className="text-slate-300 text-sm mb-2">荃灣海盛路3號TML廣場25樓B6室</p>
                   <p className="text-slate-300 text-sm flex items-center"><Phone className="w-4 h-4 mr-2" /> +852 3111 2328</p>
                 </div>
 
-                <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700">
-                  <h4 className="text-orange-400 font-bold mb-3 flex items-center">
+                <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+                  <h4 className="text-orange-400 font-bold mb-4 flex items-center">
                     <MapPin className="w-5 h-5 mr-2" /> 台灣分公司
                   </h4>
                   <p className="text-slate-300 text-sm mb-2">台北市大安區信義路四段380號3樓</p>
                   <p className="text-slate-300 text-sm flex items-center"><Phone className="w-4 h-4 mr-2" /> +886 2 7708 0766</p>
                 </div>
 
-                <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700">
-                  <h4 className="text-orange-400 font-bold mb-3 flex items-center">
-                    <Globe2 className="w-5 h-5 mr-2" /> 泰國 / 馬來西亞 據點
-                  </h4>
-                  <p className="text-slate-300 text-sm">提供最在地的東南亞跨國行銷支援</p>
-                </div>
-
-                <div className="flex items-center text-slate-300 hover:text-white transition-colors pt-4">
+                <div className="flex items-center text-slate-300 hover:text-white transition-colors">
                   <Mail className="w-5 h-5 mr-3 text-orange-400" />
                   <a href="mailto:enquiry@act-m.com" className="text-lg">enquiry@act-m.com</a>
                 </div>
@@ -651,11 +630,12 @@ const App = () => {
         <p>&copy; {new Date().getFullYear()} ACT MEDIA 戶動媒體股份有限公司. All Rights Reserved.</p>
       </footer>
 
-      {/* Floating Action Button */}
+      {/* Floating Action Button (WhatsApp/Messenger concept) */}
       <div className="fixed bottom-6 right-6 z-50 group">
         <button className="bg-green-500 hover:bg-green-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-transform transform hover:scale-110">
           <MessageCircle className="w-7 h-7" />
         </button>
+        {/* Tooltip */}
         <div className="absolute right-16 top-1/2 -translate-y-1/2 px-3 py-2 bg-slate-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
           線上即時諮詢
         </div>
