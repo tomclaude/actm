@@ -1,828 +1,668 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ACT MEDIA 戶動媒體 | The Agency of Actions</title>
-  <meta name="description" content="ACT MEDIA 戶動媒體股份有限公司 — 一站式全方位行銷整合與媒體採購，精通線上與線下媒體經營的跨國性廣告公司。香港 · 台灣 · 亞洲。" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;700;900&family=Instrument+Sans:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
-</head>
-<body>
+import React, { useState } from 'react';
+import { 
+  Rocket, 
+  Globe2, 
+  Layers, 
+  MonitorSmartphone, 
+  Map, 
+  Video, 
+  Mic2, 
+  LayoutTemplate, 
+  ChevronRight,
+  MapPin,
+  Phone,
+  Mail,
+  MessageCircle,
+  Menu,
+  X,
+  Sparkles,
+  Loader2
+} from 'lucide-react';
 
-<!-- ── FLOATING CTA ─────────────────────────────── -->
-<a href="https://wa.me/85231112328" target="_blank" class="whatsapp-float" aria-label="WhatsApp">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.127 1.533 5.867L0 24l6.295-1.516A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.015-1.378l-.36-.214-3.733.899.942-3.644-.234-.374A9.818 9.818 0 1112 21.818z"/></svg>
-</a>
+const apiKey = ""; // 執行環境將自動提供 API Key
 
-<!-- ── NAVIGATION ────────────────────────────────── -->
-<header id="nav" class="nav">
-  <div class="nav__inner">
-    <a href="#home" class="nav__logo">
-      <span class="nav__logo-act">ACT</span><span class="nav__logo-media">MEDIA</span>
-      <span class="nav__logo-sub">The Agency of Actions</span>
-    </a>
-    <nav class="nav__links">
-      <a href="#services">服務</a>
-      <a href="#work">案例</a>
-      <a href="#about">關於</a>
-      <a href="#contact" class="nav__cta">立即諮詢</a>
-    </nav>
-    <button class="nav__burger" aria-label="選單" id="burger">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-  <div class="nav__mobile" id="mobile-menu">
-    <a href="#services" class="mobile-link">服務 Services</a>
-    <a href="#work" class="mobile-link">案例 Work</a>
-    <a href="#about" class="mobile-link">關於 About</a>
-    <a href="#contact" class="mobile-link mobile-link--cta">立即諮詢</a>
-  </div>
-</header>
+// 指數退避重試機制 (Exponential Backoff)
+const fetchWithRetry = async (url, options, retries = 5) => {
+  const delays = [1000, 2000, 4000, 8000, 16000];
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(url, options);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      if (i === retries - 1) throw error;
+      await new Promise(resolve => setTimeout(resolve, delays[i]));
+    }
+  }
+};
 
-<!-- ── HERO ──────────────────────────────────────── -->
-<section id="home" class="hero">
-  <div class="hero__bg">
-    <div class="hero__grid"></div>
-    <div class="hero__glow"></div>
-    <div class="hero__lines">
-      <span></span><span></span><span></span><span></span><span></span>
-    </div>
-  </div>
-  <div class="hero__content">
-    <div class="hero__overline">
-      <span class="dot"></span>
-      Hong Kong · Taiwan · China · Asia
-      <span class="dot"></span>
-      Est. 2006
-    </div>
-    <h1 class="hero__title">
-      <span class="hero__title-zh">行動派</span>
-      <span class="hero__title-en">ACT MEDIA</span>
-    </h1>
-    <p class="hero__tagline">讓你的行銷想像，完美落地。</p>
-    <p class="hero__sub">一站式整合行銷 × 跨境媒體採購 × 在地化創意製作</p>
-    <div class="hero__actions">
-      <a href="#contact" class="btn btn--primary">取得免費提案 →</a>
-      <a href="#work" class="btn btn--ghost">查看成功案例</a>
-    </div>
-  </div>
-  <div class="hero__stats">
-    <div class="stat">
-      <span class="stat__val">18<sup>+</sup></span>
-      <span class="stat__label">年業界經驗</span>
-    </div>
-    <div class="stat__divider"></div>
-    <div class="stat">
-      <span class="stat__val">HK · TW · CN</span>
-      <span class="stat__label">服務市場</span>
-    </div>
-    <div class="stat__divider"></div>
-    <div class="stat">
-      <span class="stat__val">360°</span>
-      <span class="stat__label">一站式全包</span>
-    </div>
-  </div>
-  <div class="hero__scroll">
-    <span>Scroll</span>
-    <div class="hero__scroll-line"></div>
-  </div>
-</section>
+const App = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('all');
 
-<!-- ── WHY US ─────────────────────────────────────── -->
-<section id="why" class="why">
-  <div class="container">
-    <div class="section-label">Why ACT MEDIA</div>
-    <h2 class="section-title">解決你的行銷痛點</h2>
-    <div class="why__grid">
-      <div class="why__card" data-num="01">
-        <div class="why__icon">⚡</div>
-        <h3>即時反應，零等待</h3>
-        <p>自有獨立錄音室、直播室及攝影工作室，自家拍攝製作與美術設計團隊，無需外包等待，當日修改即刻完成。</p>
-      </div>
-      <div class="why__card" data-num="02">
-        <div class="why__icon">🌏</div>
-        <h3>港台無縫，雙市場</h3>
-        <p>香港唯一一間在台灣設立實體辦公室的廣告公司，香港、台灣、中國內地三地通訊零時差，在地化策略同步執行。</p>
-      </div>
-      <div class="why__card" data-num="03">
-        <div class="why__icon">◈</div>
-        <h3>線上線下，全包搞定</h3>
-        <p>從數位廣告、KOL網紅合作、戶外媒體、活動策劃到影音製作，一站式服務，單一夥伴整合一切行銷需求。</p>
-      </div>
-    </div>
-  </div>
-</section>
+  // AI 靈感引擎狀態
+  const [aiInput, setAiInput] = useState({ brand: '', audience: '' });
+  const [aiResult, setAiResult] = useState('');
+  const [isGeneratingInspiration, setIsGeneratingInspiration] = useState(false);
+  const [aiError, setAiError] = useState('');
 
-<!-- ── SERVICES ───────────────────────────────────── -->
-<section id="services" class="services">
-  <div class="container">
-    <div class="section-label">Our Services</div>
-    <h2 class="section-title">全方位服務矩陣</h2>
-    <div class="services__grid">
+  // 聯絡表單狀態
+  const [formData, setFormData] = useState({ notes: '' });
+  const [isExpandingNotes, setIsExpandingNotes] = useState(false);
 
-      <div class="svc-card">
-        <div class="svc-card__num">01</div>
-        <div class="svc-card__icon">
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="4" y="10" width="40" height="28" rx="2"/>
-            <path d="M16 38v4M32 38v4M10 42h28"/>
-            <circle cx="24" cy="24" r="6"/>
-            <path d="M24 18v-4M24 34v-4M18 24h-4M34 24h-4"/>
-          </svg>
-        </div>
-        <h3>數位行銷</h3>
-        <p class="svc-card__en">Digital Marketing</p>
-        <ul>
-          <li>SEO / SEM 搜尋優化</li>
-          <li>FB / IG 社群媒體經營</li>
-          <li>小紅書推廣</li>
-          <li>KOL / YouTuber 網紅合作</li>
-          <li>遊戲公會經營 & 直播</li>
-        </ul>
-      </div>
+  // 呼叫 Gemini API 產生行銷靈感
+  const handleGenerateInspiration = async () => {
+    if (!aiInput.brand || !aiInput.audience) {
+      setAiError('請輸入品牌名稱與目標受眾');
+      return;
+    }
+    
+    setIsGeneratingInspiration(true);
+    setAiError('');
+    setAiResult('');
 
-      <div class="svc-card">
-        <div class="svc-card__num">02</div>
-        <div class="svc-card__icon">
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="6" y="14" width="36" height="24" rx="1"/>
-            <path d="M2 20h4M42 20h4M14 38l-4 6M34 38l4 6"/>
-            <path d="M18 26l4 4 8-8"/>
-          </svg>
-        </div>
-        <h3>戶外廣告</h3>
-        <p class="svc-card__en">OOH & Offline</p>
-        <ul>
-          <li>港鐵 / 巴士 / 電車廣告</li>
-          <li>大型 LED 螢幕</li>
-          <li>巴士站牌 & 戶外廣告版</li>
-          <li>Roadshow 路演活動</li>
-          <li>台灣 LED 影音廣告</li>
-        </ul>
-      </div>
+    const prompt = `你是一位頂尖的廣告創意總監。請根據以下資訊，為客戶構思一個大膽且具備話題性的行銷活動點子。
+      產品/品牌：${aiInput.brand}
+      目標受眾：${aiInput.audience}
+      請分點列出：
+      1. 創意活動主題 (Hook)
+      2. 核心概念 (Concept)
+      3. 建議的傳播管道 (Channels)
+      字數約 150-200 字，語氣充滿熱情與說服力，不要使用 Markdown 標題符號，使用純文字排版即可。`;
 
-      <div class="svc-card">
-        <div class="svc-card__num">03</div>
-        <div class="svc-card__icon">
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="24" cy="24" r="10"/>
-            <path d="M24 4v4M24 40v4M4 24h4M40 24h4"/>
-            <path d="M10 10l3 3M35 35l3 3M10 38l3-3M35 13l3-3"/>
-            <circle cx="24" cy="24" r="4" fill="currentColor" opacity="0.3"/>
-          </svg>
-        </div>
-        <h3>影音製作</h3>
-        <p class="svc-card__en">Creative & Production</p>
-        <ul>
-          <li>電視廣告 (TVC) 製作</li>
-          <li>本土化影音拍攝</li>
-          <li>獨立錄音室 / 直播室</li>
-          <li>廣告設計 & 美術製作</li>
-          <li>翻譯 & 在地化文案</li>
-        </ul>
-      </div>
+    try {
+      const result = await fetchWithRetry(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }]
+          })
+        }
+      );
+      
+      const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) {
+        setAiResult(text);
+      } else {
+        setAiError('產生失敗，請稍後再試。');
+      }
+    } catch (err) {
+      setAiError('網路連線發生錯誤，請稍後再試。');
+    } finally {
+      setIsGeneratingInspiration(false);
+    }
+  };
 
-      <div class="svc-card">
-        <div class="svc-card__num">04</div>
-        <div class="svc-card__icon">
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M24 6l4 8h9l-7 6 3 9-9-5-9 5 3-9-7-6h9z"/>
-            <circle cx="24" cy="36" r="6"/>
-            <path d="M18 36h12"/>
-          </svg>
-        </div>
-        <h3>公關 & 活動</h3>
-        <p class="svc-card__en">PR & Event</p>
-        <ul>
-          <li>品牌發表會 & 粉絲見面會</li>
-          <li>電競比賽 & 動漫節活動</li>
-          <li>線下玩家活動策劃執行</li>
-          <li>新聞稿撰寫 & 媒體採訪</li>
-          <li>跨界異業合作</li>
-        </ul>
-      </div>
+  // 呼叫 Gemini API 擴充表單需求描述
+  const handleExpandNotes = async () => {
+    if (!formData.notes) return;
+    
+    setIsExpandingNotes(true);
+    
+    const prompt = `我正在填寫廣告代理商的需求表單。這是我目前的初步想法：
+    「${formData.notes}」
+    請幫我將這段文字擴充、潤飾成更專業的專案需求簡述，讓廣告公司更能理解我的痛點與期待。請直接輸出潤飾後的文字，不需要開場白，字數約 100 字以內。`;
 
-      <div class="svc-card">
-        <div class="svc-card__num">05</div>
-        <div class="svc-card__icon">
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="6" y="8" width="36" height="26" rx="2"/>
-            <path d="M16 34v6M32 34v6M10 40h28"/>
-            <path d="M14 20h6M14 26h20M28 20h6"/>
-          </svg>
-        </div>
-        <h3>網站設計</h3>
-        <p class="svc-card__en">Website Design</p>
-        <ul>
-          <li>響應式網站建置 (RWD)</li>
-          <li>SEO 技術優化</li>
-          <li>後台系統支援</li>
-          <li>Landing Page 設計</li>
-          <li>遊戲官網 & 活動頁</li>
-        </ul>
-      </div>
+    try {
+      const result = await fetchWithRetry(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }]
+          })
+        }
+      );
+      
+      const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) {
+        setFormData(prev => ({ ...prev, notes: text.trim() }));
+      }
+    } catch (err) {
+      console.error('Failed to expand notes', err);
+    } finally {
+      setIsExpandingNotes(false);
+    }
+  };
 
-      <div class="svc-card svc-card--highlight">
-        <div class="svc-card__num">+</div>
-        <h3>產品 & 遊戲<br/>本地化</h3>
-        <p class="svc-card__en">Product & Game Localization</p>
-        <ul>
-          <li>遊戲測試 & 評估</li>
-          <li>社群帳號代營運</li>
-          <li>代言人洽談 & 拍攝</li>
-          <li>繪師合作 & 二創推廣</li>
-          <li>電玩展 & 活動攤位</li>
-        </ul>
-      </div>
+  // 根據 PDF 內容更新的真實案例與網路授權圖片
+  const portfolioData = [
+    { id: 1, title: 'RO仙境傳說：世界之旅', category: 'game', desc: '網紅直播與公會經營，首日開服突破百萬觀看', image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800' },
+    { id: 2, title: 'Sainderma (巴黎頂級護膚)', category: 'brand', desc: '小紅書與 IG 行銷跨國品牌推廣', image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&q=80&w=800' },
+    { id: 3, title: '老協珍 人蔘精', category: 'brand', desc: '邀請亞洲天王郭富城代言，港台熱銷突破百萬樽', image: 'https://images.unsplash.com/photo-1584362917165-526a968579e8?auto=format&fit=crop&q=80&w=800' },
+    { id: 4, title: '法國五月藝術節 (French May)', category: 'event', desc: '大型文化活動曝光與線上線下整合推廣', image: 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=800' },
+    { id: 5, title: '《數碼龐克號》', category: 'event', desc: '香港設計中心 KOL 導流與活動擴散', image: 'https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?auto=format&fit=crop&q=80&w=800' },
+    { id: 6, title: 'State of Survival 全面屍控', category: 'game', desc: '電視廣告、網紅合作影片及微辣贊助影片', image: 'https://images.unsplash.com/photo-1533282960533-51328aa26bb2?auto=format&fit=crop&q=80&w=800' },
+    { id: 7, title: '關懷愛滋 AIDS Concern', category: 'ngo', desc: '非牟利組織反歧視宣傳片拍攝與理念推廣', image: 'https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&q=80&w=800' },
+    { id: 8, title: '傑志足球隊 (Kitchee)', category: 'ngo', desc: '球隊周邊商品、海報與服裝視覺設計', image: 'https://images.unsplash.com/photo-1518605368461-1ee7e53f20f2?auto=format&fit=crop&q=80&w=800' },
+    { id: 9, title: '命運聖契：少女的羈絆', category: 'game', desc: '台日韓 KOL 聯合推廣與代言人活動統籌', image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=800' },
+  ];
 
-    </div>
-  </div>
-</section>
+  const filteredPortfolio = activeFilter === 'all' 
+    ? portfolioData 
+    : portfolioData.filter(item => item.category === activeFilter);
 
-<!-- ── LIGHTBOX MODAL ──────────────────────────────── -->
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="案例詳情">
-  <div class="lightbox__overlay" id="lb-overlay"></div>
-  <div class="lightbox__panel">
-    <button class="lightbox__close" id="lb-close" aria-label="關閉">✕</button>
-    <div class="lightbox__media" id="lb-media"></div>
-    <div class="lightbox__info">
-      <p class="lightbox__tags" id="lb-tags"></p>
-      <h2 class="lightbox__title" id="lb-title"></h2>
-      <p class="lightbox__desc" id="lb-desc"></p>
-      <div class="lightbox__gallery" id="lb-gallery"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ── WORK / CASE STUDIES ───────────────────────── -->
-<section id="work" class="work">
-  <div class="container">
-    <div class="section-label">Selected Work</div>
-    <h2 class="section-title">精選合作案例</h2>
-
-    <div class="work__filters">
-      <button class="filter-btn active" data-filter="all">全部</button>
-      <button class="filter-btn" data-filter="game">遊戲</button>
-      <button class="filter-btn" data-filter="ooh">戶外廣告</button>
-      <button class="filter-btn" data-filter="event">活動策劃</button>
-      <button class="filter-btn" data-filter="kol">KOL合作</button>
-      <button class="filter-btn" data-filter="brand">品牌推廣</button>
-    </div>
-
-    <div class="work__grid" id="work-grid">
-
-      <!-- 1. RO 世界之旅 -->
-      <div class="work-card" data-cat="game kol"
-        data-title="RO 仙境傳說：世界之旅"
-        data-tags="遊戲 · KOL合作 · 直播 · TW"
-        data-desc="合作台灣核心 RO 20+ 位 KOL，包含公會經營 + OB&CBT 直播合作。知名直播主平民百姓 (Vinson) 首日開服拚第一，吸引百萬觀看。"
-        data-yt="https://www.youtube.com/embed/videoseries?list=PLwhateverRO"
-        data-imgs='["https://static.wixstatic.com/media/7263b1_b3064aa8e771457588f8f89544bfd067~mv2.png/v1/fill/w_800,h_474,al_c,q_85,enc_avif,quality_auto/web%20cover-06.png"]'>
-        <div class="work-card__thumb">
-          <img src="https://static.wixstatic.com/media/7263b1_b3064aa8e771457588f8f89544bfd067~mv2.png/v1/fill/w_600,h_360,al_c,q_85,enc_avif,quality_auto/web%20cover-06.png"
-               alt="RO 仙境傳說 世界之旅" loading="lazy" />
-          <div class="work-card__overlay">
-            <span class="work-card__play">▶ 查看案例</span>
-          </div>
-          <span class="work-card__market">TW</span>
-        </div>
-        <div class="work-card__body">
-          <p class="work-card__tags">遊戲 · KOL合作 · 直播</p>
-          <h3>RO 仙境傳說：世界之旅</h3>
-          <p>合作 20+ 位台灣核心 KOL，公會經營 + OB&amp;CBT 直播，首日百萬觀看。</p>
-        </div>
-      </div>
-
-      <!-- 2. 命運聖契 -->
-      <div class="work-card" data-cat="game kol"
-        data-title="命運聖契：少女的羈絆"
-        data-tags="遊戲 · 代言人 · 拍攝製作 · TW/HK"
-        data-desc="邀請日本女星桃乃木香奈、台灣元元、韓國圓圓擔任代言人，人選洽談 + 代言拍攝 + 全案數十位 KOL 影片與直播合作。"
-        data-yt="https://www.youtube.com/embed/xxxxxxFateGirls"
-        data-imgs='["https://static.wixstatic.com/media/7263b1_9f20658e8b52445d9305a5396a71f99d~mv2.png/v1/fill/w_800,h_474,al_c,q_85,enc_avif,quality_auto/web%20cover-05.png"]'>
-        <div class="work-card__thumb">
-          <img src="https://static.wixstatic.com/media/7263b1_9f20658e8b52445d9305a5396a71f99d~mv2.png/v1/fill/w_600,h_360,al_c,q_85,enc_avif,quality_auto/web%20cover-05.png"
-               alt="命運聖契 少女的羈絆" loading="lazy" />
-          <div class="work-card__overlay">
-            <span class="work-card__play">▶ 查看案例</span>
-          </div>
-          <span class="work-card__market">TW/HK</span>
-        </div>
-        <div class="work-card__body">
-          <p class="work-card__tags">遊戲 · 代言人 · KOL</p>
-          <h3>命運聖契：少女的羈絆</h3>
-          <p>日本女星桃乃木香奈 + 台韓女生聯合代言，人選洽談 + 拍攝全包。</p>
-        </div>
-      </div>
-
-      <!-- 3. 崩壞3rd OOH -->
-      <div class="work-card" data-cat="ooh game"
-        data-title="崩壞3rd — 戶外廣告 & 電視廣告"
-        data-tags="戶外廣告 · TVC · HK"
-        data-desc="崩壞3rd × 原神電視廣告製作、巴士站牌廣告、銅鑼灣戶外大型廣告版，以及週年VIP玩家零食箱禮物派發活動。"
-        data-yt=""
-        data-imgs='["https://static.wixstatic.com/media/7263b1_428704bb1b0b4c7eb80763355357b018~mv2.jpg/v1/fill/w_800,h_536,al_c,q_85,enc_avif,quality_auto/%E5%B4%A9%E5%A3%9E3rd_TVB%E7%89%88%E6%9C%AC_%E6%9C%80%E7%B5%82%E7%89%88.jpg","https://static.wixstatic.com/media/7263b1_8a1d1e3c799f48dc8ebc9a74ebf635ec~mv2.jpg/v1/fill/w_800,h_536,al_c,q_85,enc_avif,quality_auto/%E3%80%90%E8%80%81%E5%8D%94%E7%8F%8D%E3%80%91%E4%BA%BA%E8%94%98%E7%B2%BE(%E7%B2%B5%E8%AA%9E)_TVCF_%E9%83%AD%E5%AF%8C%E5%9F%8E_20_s(%E5%A4%A7%E6%AA%94).jpg"]'>
-        <div class="work-card__thumb">
-          <img src="https://static.wixstatic.com/media/7263b1_428704bb1b0b4c7eb80763355357b018~mv2.jpg/v1/fill/w_600,h_360,al_c,q_85,enc_avif,quality_auto/%E5%B4%A9%E5%A3%9E3rd_TVB%E7%89%88%E6%9C%AC_%E6%9C%80%E7%B5%82%E7%89%88.jpg"
-               alt="崩壞3rd 電視廣告" loading="lazy" />
-          <div class="work-card__overlay">
-            <span class="work-card__play">▶ 查看案例</span>
-          </div>
-          <span class="work-card__market">HK</span>
-        </div>
-        <div class="work-card__body">
-          <p class="work-card__tags">戶外廣告 · TVC · OOH</p>
-          <h3>崩壞3rd × 原神</h3>
-          <p>TVC 製作、巴士站牌、銅鑼灣戶外廣告版 + VIP 玩家禮物派發。</p>
-        </div>
-      </div>
-
-      <!-- 4. State Of Survival -->
-      <div class="work-card" data-cat="game kol"
-        data-title="State Of Survival"
-        data-tags="遊戲 · KOL · 電視廣告 · HK/TW"
-        data-desc="週年慶電視廣告製作、FHProduction 創意劇情影片（逃出豐力樓）、微辣 / 在下葉問等網紅置入廣告、網上媒體 Banner 及粉絲團日常經營。"
-        data-yt="https://www.youtube.com/embed/xxxxxxSoS"
-        data-imgs='["https://static.wixstatic.com/media/7263b1_dcc0d3c4844b4126abc0bb61c2185dcf~mv2.jpg/v1/fill/w_800,h_536,al_c,q_85,enc_avif,quality_auto/15s_Viu-TV.jpg"]'>
-        <div class="work-card__thumb">
-          <img src="https://static.wixstatic.com/media/7263b1_dcc0d3c4844b4126abc0bb61c2185dcf~mv2.jpg/v1/fill/w_600,h_360,al_c,q_85,enc_avif,quality_auto/15s_Viu-TV.jpg"
-               alt="State of Survival TVC" loading="lazy" />
-          <div class="work-card__overlay">
-            <span class="work-card__play">▶ 查看案例</span>
-          </div>
-          <span class="work-card__market">HK/TW</span>
-        </div>
-        <div class="work-card__body">
-          <p class="work-card__tags">遊戲 · KOL · 電視廣告</p>
-          <h3>State Of Survival</h3>
-          <p>TVC + 創意劇情片 + 微辣等 KOL 合作 + 粉絲團經營全包。</p>
-        </div>
-      </div>
-
-      <!-- 5. 天諭 OOH -->
-      <div class="work-card" data-cat="ooh game"
-        data-title="天諭 — 巴士 & 地鐵廣告"
-        data-tags="戶外廣告 · 地鐵 · 巴士 · HK"
-        data-desc="香港雙層巴士車身全版廣告 + 地鐵扶手電梯廣告，帶你穿越《天諭》的雲垂大陸，打造全城沉浸式品牌體驗。"
-        data-yt=""
-        data-imgs='["https://static.wixstatic.com/media/7263b1_37518b34398f43d2b52ceb9fe60644b3~mv2.jpg/v1/fill/w_800,h_474,al_c,q_85,enc_avif,quality_auto/ican-logo.jpg"]'>
-        <div class="work-card__thumb">
-          <img src="https://static.wixstatic.com/media/7263b1_37518b34398f43d2b52ceb9fe60644b3~mv2.jpg/v1/fill/w_600,h_360,al_c,q_85,enc_avif,quality_auto/ican-logo.jpg"
-               alt="天諭 戶外廣告" loading="lazy" />
-          <div class="work-card__overlay">
-            <span class="work-card__play">▶ 查看案例</span>
-          </div>
-          <span class="work-card__market">HK</span>
-        </div>
-        <div class="work-card__body">
-          <p class="work-card__tags">戶外廣告 · 地鐵 · 巴士</p>
-          <h3>天諭</h3>
-          <p>雙層巴士車身全版 + 地鐵電梯廣告，城市級沉浸式覆蓋。</p>
-        </div>
-      </div>
-
-      <!-- 6. 未定事件簿 -->
-      <div class="work-card" data-cat="event game"
-        data-title="未定事件簿 — 餐廳合作 & 聖誕線下活動"
-        data-tags="活動策劃 · 線下體驗 · HK"
-        data-desc="「蜜夜誕禮」聖誕線下活動：Slow Walker 餐廳主題佈置、場地充滿遊戲角色插畫及特色餐單，吸引大批粉絲排隊打卡。聖誕夜現場爆滿。"
-        data-yt=""
-        data-imgs='["https://static.wixstatic.com/media/7263b1_0cc9a68e33804c86bf66f93956050c8f~mv2.png/v1/fill/w_800,h_474,al_c,q_85,enc_avif,quality_auto/web%20cover-08.png"]'>
-        <div class="work-card__thumb">
-          <img src="https://static.wixstatic.com/media/7263b1_0cc9a68e33804c86bf66f93956050c8f~mv2.png/v1/fill/w_600,h_360,al_c,q_85,enc_avif,quality_auto/web%20cover-08.png"
-               alt="未定事件簿 聖誕活動" loading="lazy" />
-          <div class="work-card__overlay">
-            <span class="work-card__play">▶ 查看案例</span>
-          </div>
-          <span class="work-card__market">HK</span>
-        </div>
-        <div class="work-card__body">
-          <p class="work-card__tags">活動策劃 · 餐廳合作</p>
-          <h3>未定事件簿</h3>
-          <p>蜜夜誕禮聖誕活動：主題餐廳 + 線下粉絲見面，場地爆滿。</p>
-        </div>
-      </div>
-
-      <!-- 7. KONAMI Metal Gear Solid -->
-      <div class="work-card" data-cat="game kol"
-        data-title="KONAMI — Metal Gear Solid Δ 東京電玩展"
-        data-tags="遊戲 · KOL · 電玩展 · TW"
-        data-desc="2024 東京電玩展，安排台灣 KOL Sandykaka、遊戲閒聊 foxranch 搶先體驗 Metal Gear Solid Δ: Snake Eater，製作第一手體驗影片。同時執行魂斗羅、遊戲王 Master Duel 台灣網紅直播合作。"
-        data-yt="https://www.youtube.com/embed/xxxxxxKONAMI"
-        data-imgs='["https://static.wixstatic.com/media/7263b1_15a2a74bbc6241ea8cdaaa0931047352~mv2.png/v1/fill/w_800,h_474,al_c,q_85,enc_avif,quality_auto/web%20cover-04.png"]'>
-        <div class="work-card__thumb">
-          <img src="https://static.wixstatic.com/media/7263b1_15a2a74bbc6241ea8cdaaa0931047352~mv2.png/v1/fill/w_600,h_360,al_c,q_85,enc_avif,quality_auto/web%20cover-04.png"
-               alt="KONAMI 東京電玩展 KOL" loading="lazy" />
-          <div class="work-card__overlay">
-            <span class="work-card__play">▶ 查看案例</span>
-          </div>
-          <span class="work-card__market">TW</span>
-        </div>
-        <div class="work-card__body">
-          <p class="work-card__tags">遊戲 · KOL · 東京電玩展</p>
-          <h3>KONAMI — Metal Gear Solid Δ</h3>
-          <p>東京電玩展搶先體驗影片 + 魂斗羅、遊戲王 Master Duel 直播合作。</p>
-        </div>
-      </div>
-
-      <!-- 8. RO 6週年船上見面會 -->
-      <div class="work-card" data-cat="event game"
-        data-title="RO 仙境傳說 × 維多利亞港 6週年活動"
-        data-tags="活動策劃 · 粉絲見面會 · HK"
-        data-desc="慶祝遊戲六週年，於維多利亞港洋紫荊遊輪上舉辦玩家見面會。港澳台三地玩家相聚，互動遊戲、抽獎活動、Cosplay 打卡，打造難忘體驗。"
-        data-yt=""
-        data-imgs='["https://static.wixstatic.com/media/7263b1_b3064aa8e771457588f8f89544bfd067~mv2.png/v1/fill/w_800,h_474,al_c,q_85,enc_avif,quality_auto/web%20cover-06.png"]'>
-        <div class="work-card__thumb">
-          <img src="https://static.wixstatic.com/media/7263b1_b3064aa8e771457588f8f89544bfd067~mv2.png/v1/fill/w_600,h_360,al_c,q_85,enc_avif,quality_auto/web%20cover-06.png"
-               alt="RO 仙境傳說 六週年遊船活動" loading="lazy" />
-          <div class="work-card__overlay">
-            <span class="work-card__play">▶ 查看案例</span>
-          </div>
-          <span class="work-card__market">HK</span>
-        </div>
-        <div class="work-card__body">
-          <p class="work-card__tags">活動策劃 · 粉絲見面會</p>
-          <h3>RO 仙境傳說 × 數碼龐克號</h3>
-          <p>維多利亞港遊輪 6 週年慶典，港澳台玩家齊聚，互動遊戲 + 抽獎。</p>
-        </div>
-      </div>
-
-      <!-- 9. French May 法國五月 -->
-      <div class="work-card" data-cat="ooh brand"
-        data-title="法國五月藝術節 (French May)"
-        data-tags="戶外廣告 · 文化活動 · HK"
-        data-desc="亞洲最大型文化盛事之一。Act Media 連續多年為法國五月策劃戶外媒體推廣，涵蓋港鐵、巴士、電車及大型廣告版，每年逾二十萬人參與。"
-        data-yt=""
-        data-imgs='["https://static.wixstatic.com/media/7263b1_e0a18f4e4aef426fbb30144091762b7b~mv2.jpg/v1/fill/w_800,h_474,al_c,q_85,enc_avif,quality_auto/FM%20Logos%20Design%20Files-01.jpg"]'>
-        <div class="work-card__thumb">
-          <img src="https://static.wixstatic.com/media/7263b1_e0a18f4e4aef426fbb30144091762b7b~mv2.jpg/v1/fill/w_600,h_360,al_c,q_85,enc_avif,quality_auto/FM%20Logos%20Design%20Files-01.jpg"
-               alt="法國五月 French May" loading="lazy" />
-          <div class="work-card__overlay">
-            <span class="work-card__play">▶ 查看案例</span>
-          </div>
-          <span class="work-card__market">HK</span>
-        </div>
-        <div class="work-card__body">
-          <p class="work-card__tags">戶外廣告 · 文化活動</p>
-          <h3>法國五月 French May</h3>
-          <p>亞洲最大文化盛事，多年戶外媒體策劃，每年逾廿萬人參與。</p>
-        </div>
-      </div>
-
-      <!-- 10. 風色童話 -->
-      <div class="work-card" data-cat="event game"
-        data-title="風色童話 4.5周年 — 大狸夏日慶典"
-        data-tags="活動策劃 · 線下體驗 · HK"
-        data-desc="為慶祝《風色童話》4.5周年，舉辦大狸夏日慶典快閃活動，場地設置巨型阿狸氣球打卡牆、阿狸造型銅鑼燒體驗，現場更有精緻遊戲周邊禮品。"
-        data-yt=""
-        data-imgs='["https://static.wixstatic.com/media/7263b1_ddddf50eeda9444a84bcf8de72039403~mv2.png/v1/fill/w_800,h_474,al_c,q_85,enc_avif,quality_auto/web%20cover-01.png"]'>
-        <div class="work-card__thumb">
-          <img src="https://static.wixstatic.com/media/7263b1_ddddf50eeda9444a84bcf8de72039403~mv2.png/v1/fill/w_600,h_360,al_c,q_85,enc_avif,quality_auto/web%20cover-01.png"
-               alt="風色童話 大狸夏日慶典" loading="lazy" />
-          <div class="work-card__overlay">
-            <span class="work-card__play">▶ 查看案例</span>
-          </div>
-          <span class="work-card__market">HK</span>
-        </div>
-        <div class="work-card__body">
-          <p class="work-card__tags">活動策劃 · 線下體驗</p>
-          <h3>風色童話 4.5週年</h3>
-          <p>大狸夏日慶典：巨型氣球 + 銅鑼燒體驗 + 周邊禮品快閃活動。</p>
-        </div>
-      </div>
-
-      <!-- 11. ROG x 第五人格 動漫節 -->
-      <div class="work-card" data-cat="event game"
-        data-title="2023 動漫節 ROG × 第五人格粉絲派對"
-        data-tags="活動策劃 · 電競 · HK"
-        data-desc="ROG Phone 聯動《第五人格》於香港動漫電玩節舉辦粉絲派對，包含手遊挑戰、KOL 對決、戰隊挑機、Cosplayer 到場等多個環節。"
-        data-yt=""
-        data-imgs='["https://static.wixstatic.com/media/7263b1_15a2a74bbc6241ea8cdaaa0931047352~mv2.png/v1/fill/w_800,h_474,al_c,q_85,enc_avif,quality_auto/web%20cover-04.png"]'>
-        <div class="work-card__thumb">
-          <img src="https://static.wixstatic.com/media/7263b1_15a2a74bbc6241ea8cdaaa0931047352~mv2.png/v1/fill/w_600,h_360,al_c,q_85,enc_avif,quality_auto/web%20cover-04.png"
-               alt="ROG x 第五人格 動漫節" loading="lazy" />
-          <div class="work-card__overlay">
-            <span class="work-card__play">▶ 查看案例</span>
-          </div>
-          <span class="work-card__market">HK</span>
-        </div>
-        <div class="work-card__body">
-          <p class="work-card__tags">活動策劃 · 電競 · 動漫節</p>
-          <h3>ROG × 第五人格</h3>
-          <p>香港動漫節粉絲派對：KOL 對決 + 戰隊挑機 + Cosplay 到場。</p>
-        </div>
-      </div>
-
-      <!-- 12. 老協珍 TVC -->
-      <div class="work-card" data-cat="brand"
-        data-title="老協珍人蔘精 — 郭富城代言電視廣告"
-        data-tags="電視廣告 · TVC · 品牌推廣 · HK"
-        data-desc="知名保健品牌老協珍人蔘精，邀請巨星郭富城擔任代言人，拍攝 20秒粵語電視廣告。廣告在 myTVSUPER、TVB 等主流頻道播放，大幅提升品牌形象。"
-        data-yt=""
-        data-imgs='["https://static.wixstatic.com/media/7263b1_8a1d1e3c799f48dc8ebc9a74ebf635ec~mv2.jpg/v1/fill/w_800,h_536,al_c,q_85,enc_avif,quality_auto/%E3%80%90%E8%80%81%E5%8D%94%E7%8F%8D%E3%80%91%E4%BA%BA%E8%94%98%E7%B2%BE(%E7%B2%B5%E8%AA%9E)_TVCF_%E9%83%AD%E5%AF%8C%E5%9F%8E_20_s(%E5%A4%A7%E6%AA%94).jpg"]'>
-        <div class="work-card__thumb">
-          <img src="https://static.wixstatic.com/media/7263b1_8a1d1e3c799f48dc8ebc9a74ebf635ec~mv2.jpg/v1/fill/w_600,h_360,al_c,q_85,enc_avif,quality_auto/%E3%80%90%E8%80%81%E5%8D%94%E7%8F%8D%E3%80%91%E4%BA%BA%E8%94%98%E7%B2%BE(%E7%B2%B5%E8%AA%9E)_TVCF_%E9%83%AD%E5%AF%8C%E5%9F%8E_20_s(%E5%A4%A7%E6%AA%94).jpg"
-               alt="老協珍 郭富城 電視廣告" loading="lazy" />
-          <div class="work-card__overlay">
-            <span class="work-card__play">▶ 查看案例</span>
-          </div>
-          <span class="work-card__market">HK</span>
-        </div>
-        <div class="work-card__body">
-          <p class="work-card__tags">電視廣告 · 品牌推廣</p>
-          <h3>老協珍 × 郭富城</h3>
-          <p>郭富城代言人蔘精 TVC，TVB & myTVSUPER 全平台播放。</p>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- YouTube 建議提示 -->
-    <div class="yt-suggestion">
-      <div class="yt-suggestion__icon">
-        <svg viewBox="0 0 24 24" fill="#FF0000"><path d="M23.5 6.2s-.2-1.7-1-2.4c-.9-1-1.9-1-2.4-1.1C17.2 2.5 12 2.5 12 2.5s-5.2 0-8.1.2c-.5.1-1.5.1-2.4 1.1-.7.8-1 2.4-1 2.4S.3 8 .3 9.9v1.7c0 1.8.2 3.7.2 3.7s.2 1.7 1 2.4c.9 1 2.1.9 2.6 1 1.9.2 8 .2 8 .2s5.2 0 8.1-.2c.5-.1 1.5-.1 2.4-1.1.7-.8 1-2.4 1-2.4s.2-1.9.2-3.7V9.9c0-1.8-.3-3.7-.3-3.7z"/><path fill="#fff" d="M9.7 15.5V8.2l6.6 3.7-6.6 3.6z"/></svg>
-      </div>
-      <div>
-        <p><strong>建議：開設 ACT MEDIA YouTube 頻道</strong>，將 KOL 合作影片、TVC 廣告、活動花絮上傳，嵌入各個案例卡片，節省流量並提升 SEO。</p>
-        <p>頻道名稱建議：<strong>ACT MEDIA 戶動媒體</strong>｜說明欄加入官網連結以建立反向連結。</p>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ── CLIENTS ────────────────────────────────────── -->
-<section class="clients">
-  <div class="container">
-    <div class="section-label">Trusted By</div>
-    <p class="clients__headline">與各大品牌共同創造精彩</p>
-    <div class="clients__track-wrap">
-      <div class="clients__track">
-        <span>KONAMI</span>
-        <span>miHoYo</span>
-        <span>GODIVA</span>
-        <span>大家樂</span>
-        <span>Boots</span>
-        <span>海洋公園</span>
-        <span>中信銀行</span>
-        <span>Sainderma</span>
-        <span>Kitchee FC</span>
-        <span>Sarawak Tourism</span>
-        <span>Dia Reale</span>
-        <span>老協珍</span>
-        <span>eFootball</span>
-        <span>MoverGames</span>
-        <span>StarForce</span>
-        <span>KONAMI</span>
-        <span>miHoYo</span>
-        <span>GODIVA</span>
-        <span>大家樂</span>
-        <span>Boots</span>
-        <span>海洋公園</span>
-        <span>中信銀行</span>
-        <span>Sainderma</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── ABOUT ──────────────────────────────────────── -->
-<section id="about" class="about">
-  <div class="container">
-    <div class="about__layout">
-      <div class="about__left">
-        <div class="section-label">About Us</div>
-        <h2 class="section-title">行動派的代理</h2>
-        <p class="about__intro">成立於2006年，ACT MEDIA 戶動媒體是<strong>香港唯一一間在台灣設立實體辦公室</strong>的廣告公司。</p>
-        <p>我們由專業的戶外及數位媒體團隊組成，擁有多年豐富經驗，提供一站式全方位的行銷整合服務。在合作過程中，我們與客戶緊密溝通，深入了解需求，配合市場策略，製作高影響力的廣告活動。</p>
-        <p>香港、台灣、中國內地三地通訊零時差，定期互訪，確保在地化策略的精準執行，是你最可靠的跨境行銷夥伴。</p>
-        <div class="about__badges">
-          <div class="badge">
-            <span class="badge__val">2006</span>
-            <span class="badge__label">成立年份</span>
-          </div>
-          <div class="badge">
-            <span class="badge__val">3</span>
-            <span class="badge__label">辦公室據點</span>
-          </div>
-          <div class="badge">
-            <span class="badge__val">360°</span>
-            <span class="badge__label">全方位服務</span>
-          </div>
-        </div>
-      </div>
-      <div class="about__right">
-        <div class="teams__grid">
-          <div class="team-card">
-            <div class="team-card__icon">✏️</div>
-            <h4>美術部</h4>
-            <p>為客戶設計各類適合本地化推廣的視覺素材，在地化美學設計</p>
-          </div>
-          <div class="team-card">
-            <div class="team-card__icon">📊</div>
-            <h4>市場部</h4>
-            <p>與客戶交流了解需求，製定符合本地市場的行銷計劃與精準策略</p>
-          </div>
-          <div class="team-card">
-            <div class="team-card__icon">🎙️</div>
-            <h4>製作部</h4>
-            <p>負責本地化拍攝、錄音和技術支援，自有錄音室 / 直播室 / 攝影棚</p>
-          </div>
-          <div class="team-card">
-            <div class="team-card__icon">🎮</div>
-            <h4>產品部</h4>
-            <p>遊戲測試與本地化工作、遊戲社群帳號代營運及在地推廣執行</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── PROCESS ────────────────────────────────────── -->
-<section class="process">
-  <div class="container">
-    <div class="section-label">Our Process</div>
-    <h2 class="section-title">合作服務流程</h2>
-    <div class="process__steps">
-      <div class="process__step">
-        <div class="process__num">01</div>
-        <h4>了解需求</h4>
-        <p>與客戶充分溝通，深入了解品牌目標與市場策略方向</p>
-      </div>
-      <div class="process__arrow">→</div>
-      <div class="process__step">
-        <div class="process__num">02</div>
-        <h4>量身提案</h4>
-        <p>針對性制定行銷提案，提供完整創意策略與媒體規劃</p>
-      </div>
-      <div class="process__arrow">→</div>
-      <div class="process__step">
-        <div class="process__num">03</div>
-        <h4>即時執行</h4>
-        <p>自有團隊快速推進，定期回報進度，即時解決任何問題</p>
-      </div>
-      <div class="process__arrow">→</div>
-      <div class="process__step">
-        <div class="process__num">04</div>
-        <h4>總結優化</h4>
-        <p>結案時與客戶共同檢討成效，為下次合作持續優化進步</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── CONTACT ────────────────────────────────────── -->
-<section id="contact" class="contact">
-  <div class="container">
-    <div class="contact__layout">
-      <div class="contact__left">
-        <div class="section-label">Contact Us</div>
-        <h2 class="section-title">立即取得<br/>免費行銷提案</h2>
-        <p>填寫表單後，我們將在 <strong>24 小時內</strong>與您聯繫，提供專屬行銷策略建議。</p>
-
-        <div class="offices">
-          <div class="office">
-            <div class="office__tag">🇭🇰 Hong Kong HQ</div>
-            <p>荃灣海盛路3號TML廣場25樓B6室</p>
-            <p>TML Plaza 25/F B6, 3 Hoi Shing Rd, Tsuen Wan</p>
-            <a href="tel:+85231112328">+852 3111 2328</a>
-          </div>
-          <div class="office">
-            <div class="office__tag">🇹🇼 Taiwan Office</div>
-            <p>台北市大安區信義路四段380號3樓</p>
-            <p>No. 380, Sec. 4, Xinyi Rd, Da'an, Taipei</p>
-            <a href="tel:+886277080766">+886 2 7708 0766</a>
-          </div>
-        </div>
-        <a href="mailto:enquiry@act-m.com" class="contact__email">enquiry@act-m.com</a>
-
-        <div class="social-row">
-          <a href="https://wa.me/85231112328" target="_blank" class="social-btn social-btn--wa">WhatsApp</a>
-          <a href="mailto:enquiry@act-m.com" class="social-btn">Email</a>
-        </div>
-      </div>
-
-      <div class="contact__right">
-        <form class="enquiry-form" id="enquiry-form">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="company">公司名稱 *</label>
-              <input type="text" id="company" name="company" placeholder="貴公司名稱" required />
+  return (
+    <div className="font-sans text-slate-800 bg-white">
+      {/* 導覽列 Navigation */}
+      <nav className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50 transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            {/* Logo */}
+            <div className="flex-shrink-0 flex items-center cursor-pointer">
+              <span className="text-2xl font-black tracking-tighter text-slate-900">
+                ACT<span className="text-orange-600">MEDIA</span>
+              </span>
             </div>
-            <div class="form-group">
-              <label for="contact">聯絡人 *</label>
-              <input type="text" id="contact" name="contact" placeholder="您的姓名" required />
+            
+            {/* Desktop Menu */}
+            <div className="hidden md:flex space-x-8 items-center">
+              <a href="#home" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">首頁</a>
+              <a href="#why-us" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">核心優勢</a>
+              <a href="#services" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">專業服務</a>
+              <a href="#portfolio" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">成功案例</a>
+              <a href="#about" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">關於我們</a>
+              <a href="#contact" className="px-6 py-2.5 bg-orange-600 text-white text-sm font-medium rounded-full hover:bg-orange-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                取得提案
+              </a>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden flex items-center">
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-slate-600">
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
             </div>
           </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="email">電子郵件 *</label>
-              <input type="email" id="email" name="email" placeholder="your@email.com" required />
-            </div>
-            <div class="form-group">
-              <label for="phone">聯絡電話</label>
-              <input type="tel" id="phone" name="phone" placeholder="+852 / +886" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="service">需求服務類型 *</label>
-            <select id="service" name="service" required>
-              <option value="">▾ 選擇服務類型</option>
-              <option>數位行銷 (SEO/SEM/社群)</option>
-              <option>KOL / 網紅合作</option>
-              <option>戶外廣告 (OOH)</option>
-              <option>影音製作 / TVC</option>
-              <option>活動策劃 & 公關</option>
-              <option>網站設計</option>
-              <option>遊戲本地化</option>
-              <option>綜合整合行銷</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="budget">預算範圍</label>
-              <select id="budget" name="budget">
-                <option value="">▾ 選擇預算</option>
-                <option>HK$50,000 以下</option>
-                <option>HK$50,000 – 150,000</option>
-                <option>HK$150,000 – 500,000</option>
-                <option>HK$500,000 以上</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="market">目標市場</label>
-              <select id="market" name="market">
-                <option value="">▾ 選擇市場</option>
-                <option>香港</option>
-                <option>台灣</option>
-                <option>中國內地</option>
-                <option>港台雙市場</option>
-                <option>亞洲全市場</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="message">補充說明</label>
-            <textarea id="message" name="message" rows="4" placeholder="請簡述您的行銷目標或需求..."></textarea>
-          </div>
-          <button type="submit" class="btn btn--primary btn--full">送出詢問 / Submit Enquiry →</button>
-          <p class="form-note">提交即代表您同意我們使用您的資料進行聯繫。我們絕不將資料提供予第三方。</p>
-        </form>
-        <div class="form-success" id="form-success">
-          <div class="form-success__icon">✓</div>
-          <h3>詢問已送出！</h3>
-          <p>感謝您的聯繫，我們將於 24 小時內回覆您。</p>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ── FOOTER ─────────────────────────────────────── -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer__top">
-      <div class="footer__brand">
-        <div class="footer__logo">
-          <span class="nav__logo-act">ACT</span><span class="nav__logo-media">MEDIA</span>
-        </div>
-        <p class="footer__tagline">戶動媒體股份有限公司</p>
-        <p class="footer__slogan">The Agency of Actions · 讓想像成真</p>
-      </div>
-      <div class="footer__links">
-        <h5>服務項目</h5>
-        <a href="#services">數位行銷</a>
-        <a href="#services">戶外廣告</a>
-        <a href="#services">影音製作</a>
-        <a href="#services">公關活動</a>
-        <a href="#services">網站設計</a>
-      </div>
-      <div class="footer__links">
-        <h5>公司資訊</h5>
-        <a href="#about">關於我們</a>
-        <a href="#work">成功案例</a>
-        <a href="#contact">聯絡我們</a>
-        <a href="mailto:enquiry@act-m.com">enquiry@act-m.com</a>
-      </div>
-      <div class="footer__contact">
-        <h5>辦公室</h5>
-        <p>🇭🇰 +852 3111 2328</p>
-        <p>🇹🇼 +886 2 7708 0766</p>
-        <div class="footer__social">
-          <a href="https://wa.me/85231112328" target="_blank">WhatsApp</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer__bottom">
-      <p>© 2025 ACT MEDIA 戶動媒體股份有限公司 · <a href="http://www.act-m.com" target="_blank">www.act-m.com</a> · All rights reserved.</p>
-    </div>
-  </div>
-</footer>
+        {/* Mobile Menu Panel */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              <a href="#services" className="block px-3 py-2 text-base font-medium text-slate-600">專業服務</a>
+              <a href="#portfolio" className="block px-3 py-2 text-base font-medium text-slate-600">成功案例</a>
+              <a href="#contact" className="block px-3 py-2 text-base font-medium text-orange-600">取得提案</a>
+            </div>
+          </div>
+        )}
+      </nav>
 
-<script src="js/main.js"></script>
-</body>
-</html>
+      {/* 首屏 Hero Section - 使用高畫質攝影棚/製作團隊示意圖 */}
+      <section id="home" className="relative pt-20 pb-32 lg:pt-32 lg:pb-48 overflow-hidden bg-slate-900">
+        <div className="absolute inset-0 opacity-40">
+          <img 
+            src="https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?auto=format&fit=crop&q=80&w=2000" 
+            alt="" 
+            className="w-full h-full object-cover mix-blend-overlay"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+          <div className="max-w-3xl">
+            <div className="inline-block px-4 py-1.5 rounded-full bg-orange-500/20 text-orange-400 font-semibold text-sm mb-6 border border-orange-500/30">
+              The Agency of Actions
+            </div>
+            <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight mb-6">
+              行動機構<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
+                讓你的行銷想像完美落地
+              </span>
+            </h1>
+            <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl leading-relaxed">
+              一站式全方位整合與媒體採購。從概念發想、跨國在地化測試到高階媒體投放，我們助您精準切入中港台與東南亞市場。
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a href="#contact" className="inline-flex justify-center items-center px-8 py-4 text-base font-bold rounded-full text-white bg-orange-600 hover:bg-orange-700 transition-all shadow-lg hover:shadow-orange-600/30">
+                立即聯絡我們
+                <ChevronRight className="ml-2 w-5 h-5" />
+              </a>
+              <a href="#portfolio" className="inline-flex justify-center items-center px-8 py-4 text-base font-bold rounded-full text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all border border-white/20">
+                觀看成功案例
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 核心優勢 Why Choose Us */}
+      <section id="why-us" className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">為什麼各大品牌選擇 ACT MEDIA？</h2>
+            <p className="text-slate-600 text-lg">直擊品牌痛點，提供高彈性、跨地域與無縫整合的解決方案。</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* USP 1 */}
+            <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow border border-slate-100 group">
+              <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Rocket className="text-orange-600 w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">需要極速反應？</h3>
+              <p className="text-slate-600 leading-relaxed">
+                外包溝通成本太高？我們擁有<strong className="text-slate-800">獨立錄音室、直播室與自有製作團隊</strong>，即刻修改不需等，以最高效率與彈性回應您的需求。
+              </p>
+            </div>
+
+            {/* USP 2 */}
+            <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow border border-slate-100 group">
+              <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Globe2 className="text-blue-600 w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">佈局全亞洲市場？</h3>
+              <p className="text-slate-600 leading-relaxed">
+                除了中港台三地團隊外，我們更於<strong className="text-slate-800">馬來西亞與泰國</strong>設立營運據點，專為東南亞市場提供最「在地化」的創意與產品測試。
+              </p>
+            </div>
+
+            {/* USP 3 */}
+            <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow border border-slate-100 group">
+              <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Layers className="text-purple-600 w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">線上線下太零碎？</h3>
+              <p className="text-slate-600 leading-relaxed">
+                多個代理商難以管理？公司內設行銷、美術、製作及產品部，從<strong className="text-slate-800">大型戶外 LED 廣告到 KOL 直播</strong>，我們為您一站式全包。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 專業服務 Our Services */}
+      <section id="services" className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-16 md:flex md:justify-between md:items-end">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">全方位整合服務</h2>
+              <p className="text-slate-600 text-lg">透過圖示化分類，找到最適合您當前階段的行銷利器。</p>
+            </div>
+            <a href="#contact" className="hidden md:inline-flex items-center font-semibold text-orange-600 hover:text-orange-700">
+              索取客製化服務報價 <ChevronRight className="w-4 h-4 ml-1" />
+            </a>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Service 1 */}
+            <div className="p-6 border border-slate-100 rounded-2xl hover:border-orange-200 hover:bg-orange-50/30 transition-colors">
+              <MonitorSmartphone className="w-10 h-10 text-slate-700 mb-4" />
+              <h4 className="text-lg font-bold text-slate-900 mb-2">數位行銷 Digital Marketing</h4>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                SEO/SEM 優化、社群媒體經營 (FB/IG)、小紅書戰略推廣、網紅 KOL 及 YouTuber 精準合作對接。
+              </p>
+            </div>
+            {/* Service 2 */}
+            <div className="p-6 border border-slate-100 rounded-2xl hover:border-orange-200 hover:bg-orange-50/30 transition-colors">
+              <Map className="w-10 h-10 text-slate-700 mb-4" />
+              <h4 className="text-lg font-bold text-slate-900 mb-2">戶外與線下廣告 OOH</h4>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                港鐵、巴士、電車車體廣告，大型戶外 LED 螢幕採購，以及實體路演 (Roadshow) 企劃執行。
+              </p>
+            </div>
+            {/* Service 3 */}
+            <div className="p-6 border border-slate-100 rounded-2xl hover:border-orange-200 hover:bg-orange-50/30 transition-colors">
+              <Video className="w-10 h-10 text-slate-700 mb-4" />
+              <h4 className="text-lg font-bold text-slate-900 mb-2">創意與影音製作 Creative</h4>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                商業廣告設計、本土化影音拍攝製作、電視廣告 (TVC) 統籌與專業文案翻譯服務。
+              </p>
+            </div>
+            {/* Service 4 */}
+            <div className="p-6 border border-slate-100 rounded-2xl hover:border-orange-200 hover:bg-orange-50/30 transition-colors">
+              <Mic2 className="w-10 h-10 text-slate-700 mb-4" />
+              <h4 className="text-lg font-bold text-slate-900 mb-2">公關與活動策劃 PR & Event</h4>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                大型品牌發表會、電競比賽籌辦、粉絲見面會統籌，以及專業新聞稿發布與媒體公關操作。
+              </p>
+            </div>
+            {/* Service 5 */}
+            <div className="p-6 border border-slate-100 rounded-2xl hover:border-orange-200 hover:bg-orange-50/30 transition-colors">
+              <LayoutTemplate className="w-10 h-10 text-slate-700 mb-4" />
+              <h4 className="text-lg font-bold text-slate-900 mb-2">網站設計 Website Design</h4>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                企業形象網站建置、電商平台開發、SEO 架構優化以及穩定的後台系統技術支援。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 成功案例 Portfolio */}
+      <section id="portfolio" className="py-24 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">實力見證：成功案例</h2>
+            <p className="text-slate-600 text-lg">跨足遊戲、快消、文化與非牟利等多元產業，展現全方位整合實力。</p>
+          </div>
+
+          {/* Filters */}
+          <div className="flex flex-wrap justify-center gap-3 mb-12">
+            {[
+              { id: 'all', label: '全部作品' },
+              { id: 'game', label: '遊戲發行與推廣' },
+              { id: 'event', label: '大型文化活動' },
+              { id: 'brand', label: '品牌跨國推廣' },
+              { id: 'ngo', label: '運動與非牟利' },
+            ].map(filter => (
+              <button
+                key={filter.id}
+                onClick={() => setActiveFilter(filter.id)}
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
+                  activeFilter === filter.id 
+                    ? 'bg-slate-900 text-white shadow-md' 
+                    : 'bg-white text-slate-600 hover:bg-slate-200 border border-slate-200'
+                }`}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Grid - 替換為真實圖片 */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPortfolio.map(item => (
+              <div key={item.id} className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100 flex flex-col">
+                <div className="h-48 flex items-center justify-center relative overflow-hidden bg-slate-100">
+                  <img 
+                    src={item.image} 
+                    alt={``} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-slate-900/0 transition-colors duration-500"></div>
+                </div>
+                <div className="p-6 flex-1 flex flex-col justify-center">
+                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-orange-600 transition-colors">{item.title}</h3>
+                  <p className="text-slate-600 text-sm line-clamp-2">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Logo Wall */}
+          <div className="mt-24 pt-16 border-t border-slate-200">
+            <p className="text-center text-sm font-semibold text-slate-500 tracking-wider mb-8 uppercase">合作客戶與信賴品牌</p>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+              {['miHoYo', 'Sainderma', 'Godiva', '老協珍', '海洋公園', '中信銀行'].map((logo, idx) => (
+                <div key={idx} className="text-xl font-black text-slate-400">
+                  {logo}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 關於我們 About Us */}
+      <section id="about" className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+            <div className="mb-12 lg:mb-0 relative">
+              <div className="aspect-square rounded-full bg-orange-50 absolute -top-12 -left-12 w-64 h-64 -z-10"></div>
+              <div className="bg-slate-100 rounded-3xl h-96 w-full flex items-center justify-center relative overflow-hidden shadow-lg">
+                <img 
+                  src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80&w=1000" 
+                  alt="" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur p-6 rounded-2xl shadow-xl">
+                   <p className="font-bold text-slate-900 text-lg mb-1">自 2006 年深耕至今</p>
+                   <p className="text-orange-600 font-medium text-sm">串聯 香港、台灣、馬來西亞、泰國</p>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">關於 ACT MEDIA</h2>
+              <p className="text-slate-600 text-lg leading-relaxed mb-8">
+                ACT MEDIA 戶動媒體不僅是一間廣告代理商，更是您品牌「行動派的戰略夥伴」。自 2006 年於香港成立，陸續在台灣 (2014)、馬來西亞 (2015)、泰國 (2016) 設立營運據點。內部完善的四大部門架構，確保每一個創意都能被精準執行。
+              </p>
+              
+              <div className="space-y-6">
+                <div className="flex">
+                  <div className="flex-shrink-0 mt-1"><div className="w-2 h-2 rounded-full bg-orange-600"></div></div>
+                  <div className="ml-4">
+                    <h4 className="text-lg font-bold text-slate-900">行銷部 (Marketing)</h4>
+                    <p className="text-slate-600 text-sm mt-1">精準市場定位，數據驅動行銷策略制定與跨國媒體採購。</p>
+                  </div>
+                </div>
+                <div className="flex">
+                  <div className="flex-shrink-0 mt-1"><div className="w-2 h-2 rounded-full bg-orange-600"></div></div>
+                  <div className="ml-4">
+                    <h4 className="text-lg font-bold text-slate-900">美術部 (Art & Design)</h4>
+                    <p className="text-slate-600 text-sm mt-1">深諳在地化視覺語彙，為客戶設計各類適合推廣的素材。</p>
+                  </div>
+                </div>
+                <div className="flex">
+                  <div className="flex-shrink-0 mt-1"><div className="w-2 h-2 rounded-full bg-orange-600"></div></div>
+                  <div className="ml-4">
+                    <h4 className="text-lg font-bold text-slate-900">製作部 (Production)</h4>
+                    <p className="text-slate-600 text-sm mt-1">強大硬體支援，從錄音、直播到高規格本土化影音拍攝。</p>
+                  </div>
+                </div>
+                <div className="flex">
+                  <div className="flex-shrink-0 mt-1"><div className="w-2 h-2 rounded-full bg-orange-600"></div></div>
+                  <div className="ml-4">
+                    <h4 className="text-lg font-bold text-slate-900">產品部 (Product)</h4>
+                    <p className="text-slate-600 text-sm mt-1">專責產品測試、社群風向調研，降低跨國市場試錯成本。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* AI 行銷靈感引擎 (Gemini Feature) */}
+      <section id="ai-generator" className="py-20 bg-gradient-to-br from-orange-50 to-red-50 relative overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center p-3 bg-white rounded-full shadow-sm text-orange-600 mb-4">
+              <Sparkles className="w-6 h-6" />
+            </div>
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">缺乏行銷靈感？讓 AI 創意總監為您激盪</h2>
+            <p className="text-slate-600 text-lg">輸入您的品牌與客群，我們將立即為您生成專屬的創意提案起手式。</p>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-xl p-8 border border-orange-100">
+            <div className="grid md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">您的品牌或產品名稱</label>
+                <input 
+                  type="text" 
+                  value={aiInput.brand}
+                  onChange={(e) => setAiInput(prev => ({ ...prev, brand: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 outline-none transition-all" 
+                  placeholder="例如：Sainderma 頂級保養品" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">想打動的目標受眾 (TA)</label>
+                <input 
+                  type="text" 
+                  value={aiInput.audience}
+                  onChange={(e) => setAiInput(prev => ({ ...prev, audience: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 outline-none transition-all" 
+                  placeholder="例如：25-35歲重視質感的都會女性" 
+                />
+              </div>
+            </div>
+            
+            <button 
+              onClick={handleGenerateInspiration}
+              disabled={isGeneratingInspiration}
+              className="w-full md:w-auto mx-auto flex items-center justify-center px-8 py-4 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg"
+            >
+              {isGeneratingInspiration ? (
+                <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> 創意激盪中...</>
+              ) : (
+                <>✨ 產生專屬行銷靈感</>
+              )}
+            </button>
+
+            {aiError && <p className="text-red-500 text-sm mt-4 text-center">{aiError}</p>}
+
+            {aiResult && (
+              <div className="mt-8 p-6 bg-orange-50 rounded-2xl border border-orange-100 animate-in fade-in slide-in-from-bottom-4">
+                <h4 className="text-orange-800 font-bold mb-3 flex items-center">
+                  <Sparkles className="w-5 h-5 mr-2" /> 您的專屬創意靈感：
+                </h4>
+                <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{aiResult}</p>
+                <div className="mt-6 text-center">
+                  <p className="text-sm text-slate-500 mb-3">覺得這個點子不錯？讓我們幫您把想像完美落地！</p>
+                  <a href="#contact" className="inline-block px-6 py-2 bg-slate-900 text-white text-sm font-medium rounded-full hover:bg-slate-800 transition-colors">
+                    找團隊實現點子
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* 聯絡我們 Contact Us */}
+      <section id="contact" className="py-24 bg-slate-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-16">
+            
+            {/* 聯絡資訊 */}
+            <div className="lg:col-span-5 mb-16 lg:mb-0">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">準備好讓想像成真了嗎？</h2>
+              <p className="text-slate-400 mb-10 text-lg">
+                留下您的需求，我們的專業團隊將在 24 小時內與您聯繫，提供專屬的整合行銷提案。
+              </p>
+
+              <div className="space-y-6">
+                <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700">
+                  <h4 className="text-orange-400 font-bold mb-3 flex items-center">
+                    <MapPin className="w-5 h-5 mr-2" /> 香港總部 (HQ)
+                  </h4>
+                  <p className="text-slate-300 text-sm mb-2">荃灣海盛路3號TML廣場25樓B6室</p>
+                  <p className="text-slate-300 text-sm flex items-center"><Phone className="w-4 h-4 mr-2" /> +852 3111 2328</p>
+                </div>
+
+                <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700">
+                  <h4 className="text-orange-400 font-bold mb-3 flex items-center">
+                    <MapPin className="w-5 h-5 mr-2" /> 台灣分公司
+                  </h4>
+                  <p className="text-slate-300 text-sm mb-2">台北市大安區信義路四段380號3樓</p>
+                  <p className="text-slate-300 text-sm flex items-center"><Phone className="w-4 h-4 mr-2" /> +886 2 7708 0766</p>
+                </div>
+
+                <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700">
+                  <h4 className="text-orange-400 font-bold mb-3 flex items-center">
+                    <Globe2 className="w-5 h-5 mr-2" /> 泰國 / 馬來西亞 據點
+                  </h4>
+                  <p className="text-slate-300 text-sm">提供最在地的東南亞跨國行銷支援</p>
+                </div>
+
+                <div className="flex items-center text-slate-300 hover:text-white transition-colors pt-4">
+                  <Mail className="w-5 h-5 mr-3 text-orange-400" />
+                  <a href="mailto:enquiry@act-m.com" className="text-lg">enquiry@act-m.com</a>
+                </div>
+              </div>
+            </div>
+
+            {/* 詢價表單 */}
+            <div className="lg:col-span-7">
+              <form className="bg-white rounded-3xl p-8 shadow-2xl">
+                <h3 className="text-2xl font-bold text-slate-900 mb-6">立即索取提案</h3>
+                <div className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">公司名稱 *</label>
+                      <input type="text" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900" placeholder="請輸入貴公司名稱" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">聯絡人姓名 *</label>
+                      <input type="text" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900" placeholder="怎麼稱呼您？" />
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">電子郵件 *</label>
+                      <input type="email" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900" placeholder="your@email.com" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">聯絡電話</label>
+                      <input type="tel" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900" placeholder="請輸入聯絡電話" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">需求服務類型 *</label>
+                    <select className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900 bg-white">
+                      <option value="">請選擇主要需求...</option>
+                      <option value="digital">數位行銷與社群經營</option>
+                      <option value="ooh">戶外與線下廣告</option>
+                      <option value="creative">影音拍攝與創意製作</option>
+                      <option value="pr">公關與活動策劃</option>
+                      <option value="web">網站設計與開發</option>
+                      <option value="full">全方位整合方案</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">預算範圍</label>
+                    <select className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900 bg-white">
+                      <option value="">請選擇預估預算...</option>
+                      <option value="1">HKD $50,000 以下</option>
+                      <option value="2">HKD $50,000 - $150,000</option>
+                      <option value="3">HKD $150,000 - $500,000</option>
+                      <option value="4">HKD $500,000 以上</option>
+                      <option value="tbd">尚未決定 / 需討論</option>
+                    </select>
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-end mb-2">
+                      <label className="block text-sm font-medium text-slate-700">補充說明</label>
+                      <button 
+                        type="button"
+                        onClick={handleExpandNotes}
+                        disabled={isExpandingNotes || !formData.notes}
+                        className="text-xs font-medium text-orange-600 hover:text-orange-700 flex items-center disabled:opacity-50 disabled:cursor-not-allowed bg-orange-50 px-2 py-1 rounded-md transition-colors"
+                      >
+                        {isExpandingNotes ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Sparkles className="w-3 h-3 mr-1" />}
+                        ✨ AI 幫我專業潤飾
+                      </button>
+                    </div>
+                    <textarea 
+                      rows="4" 
+                      value={formData.notes}
+                      onChange={(e) => setFormData({ notes: e.target.value })}
+                      className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900 resize-none" 
+                      placeholder="簡單描述您的專案目標或目前遇到的行銷挑戰..."
+                    ></textarea>
+                  </div>
+                  <button type="button" className="w-full py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-colors shadow-lg hover:shadow-xl">
+                    送出詢價
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-slate-950 text-slate-500 py-8 text-center text-sm border-t border-slate-800">
+        <p>&copy; {new Date().getFullYear()} ACT MEDIA 戶動媒體股份有限公司. All Rights Reserved.</p>
+      </footer>
+
+      {/* Floating Action Button */}
+      <div className="fixed bottom-6 right-6 z-50 group">
+        <button className="bg-green-500 hover:bg-green-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-transform transform hover:scale-110">
+          <MessageCircle className="w-7 h-7" />
+        </button>
+        <div className="absolute right-16 top-1/2 -translate-y-1/2 px-3 py-2 bg-slate-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
+          線上即時諮詢
+        </div>
+      </div>
+
+    </div>
+  );
+};
+
+export default App;
