@@ -67,11 +67,12 @@
         },
         contact: {
           title: "準備好讓想像成真了嗎？", desc: "留下您的需求，我們的專業團隊將在 24 小時內與您聯繫，提供專屬的整合行銷提案。",
-          hq: "台灣總部 (HQ)", hqAddr: "台北市大安區信義路四段380號3樓",
+          hq: "香港總部 (HQ)", hqAddr: "香港九龍觀塘道332號官塘工業中心",
+          tw: "台灣辦公室", twAddr: "台北市大安區信義路四段380號3樓",
           formTitle: "立即索取提案", company: "公司名稱 *", companyPh: "請輸入貴公司名稱", name: "聯絡人姓名 *", namePh: "怎麼稱呼您？", email: "電子郵件 *", emailPh: "your@email.com", phone: "聯絡電話", phonePh: "請輸入聯絡電話",
           service: "需求服務類型 *", servicePh: "請選擇主要需求...", services: ["數位行銷與社群經營", "戶外與線下廣告", "影音拍攝與創意製作", "公關與活動策劃", "網站設計與開發", "全方位整合方案"],
           budget: "預算範圍", budgetPh: "請選擇預估預算...", budgets: ["HKD $50,000 以下", "HKD $50,000 - $150,000", "HKD $150,000 - $500,000", "HKD $500,000 以上", "尚未決定 / 需討論"],
-          note: "補充說明", notePh: "簡單描述您的專案目標或目前遇到的行銷挑戰...", btnSubmit: "送出詢價"
+          note: "補充說明", notePh: "簡單描述您的專案目標或目前遇到的行銷挑戰...", btnSubmit: "送出詢價", btnAi: "AI 優化說明"
         },
         footer: "ACT MEDIA 戶動媒體股份有限公司. All Rights Reserved.", fab: "線上即時諮詢"
       },
@@ -121,11 +122,12 @@
         },
         contact: {
           title: "Ready to make it happen?", desc: "Leave us your requirements, and our professional team will contact you within 24 hours with a customized proposal.",
-          hq: "Taiwan Branch", hqAddr: "3F., No. 380, Sec. 4, Xinyi Rd., Da’an Dist., Taipei City",
+          hq: "Hong Kong HQ", hqAddr: "Kwun Tong Industrial Centre, 332 Kwun Tong Rd, Kowloon",
+          tw: "Taiwan Office", twAddr: "3F., No. 380, Sec. 4, Xinyi Rd., Da’an Dist., Taipei City",
           formTitle: "Request a Proposal", company: "Company Name *", companyPh: "Enter your company name", name: "Contact Name *", namePh: "How should we address you?", email: "Email Address *", emailPh: "your@email.com", phone: "Phone Number", phonePh: "Enter phone number",
           service: "Required Service *", servicePh: "Select a service...", services: ["Digital Marketing & Social", "OOH & Offline Ads", "Video & Creative Production", "PR & Event Planning", "Website Design & Dev", "Full-Service Integration"],
           budget: "Budget Range", budgetPh: "Select estimated budget...", budgets: ["Below HKD $50,000", "HKD $50,000 - $150,000", "HKD $150,000 - $500,000", "Above HKD $500,000", "To be discussed"],
-          note: "Additional Notes", notePh: "Briefly describe your project goals or marketing challenges...", btnSubmit: "Submit Request"
+          note: "Additional Notes", notePh: "Briefly describe your project goals or marketing challenges...", btnSubmit: "Submit Request", btnAi: "AI Enhance"
         },
         footer: "ACT MEDIA Co., Ltd. All Rights Reserved.", fab: "Live Chat"
       }
@@ -135,7 +137,31 @@
       const [lang, setLang] = useState('zh');
       const [isMenuOpen, setIsMenuOpen] = useState(false);
       const [activeFilter, setActiveFilter] = useState('all');
-      
+      const [formData, setFormData] = useState({ notes: '' });
+      const [isExpandingNotes, setIsExpandingNotes] = useState(false);
+
+      const handleExpandNotes = async () => {
+        if (!formData.notes) return;
+        setIsExpandingNotes(true);
+        try {
+          const res = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              model: 'claude-sonnet-4-20250514',
+              max_tokens: 1000,
+              messages: [{ role: 'user', content: `請將以下行銷需求說明改寫得更完整、專業，保留原意，約100字：\n${formData.notes}` }]
+            })
+          });
+          const data = await res.json();
+          const text = data.content?.find(b => b.type === 'text')?.text || formData.notes;
+          setFormData({ notes: text });
+        } catch (e) {
+          console.error(e);
+        }
+        setIsExpandingNotes(false);
+      };
+
       const t = dict[lang];
 
       const portfolioItems = [
