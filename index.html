@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ACT MEDIA 戶動媒體 | 行動機構</title>
+  <title>ACT MEDIA | The Action Agency</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
-    /* Add subtle animations for the entrance */
     .fade-in { animation: fadeIn 0.5s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
@@ -20,173 +19,168 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    // ⚠️ 部署到外部環境時，請在此填入您的 Google Gemini API Key 以啟用 AI 靈感產生器
-    const apiKey = ""; 
-
-    // 指數退避重試機制 (Exponential Backoff)
-    const fetchWithRetry = async (url, options, retries = 5) => {
-      const delays = [1000, 2000, 4000, 8000, 16000];
-      for (let i = 0; i < retries; i++) {
-        try {
-          const response = await fetch(url, options);
-          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-          return await response.json();
-        } catch (error) {
-          if (i === retries - 1) throw error;
-          await new Promise(resolve => setTimeout(resolve, delays[i]));
-        }
+    // Dictionary for Bilingual Support
+    const dict = {
+      zh: {
+        nav: { home: "首頁", whyUs: "核心優勢", services: "專業服務", portfolio: "成功案例", about: "關於我們", contact: "取得提案" },
+        hero: { tag: "The Action Agency", title1: "行動機構", title2: "讓你的行銷想像完美落地", desc: "一站式全方位整合與媒體採購。從概念發想、跨國在地化測試到高階媒體投放，我們助您精準切入亞洲市場，讓想像成真。", btnContact: "立即聯絡我們", btnPortfolio: "觀看成功案例" },
+        whyUs: { 
+          title: "為什麼各大品牌選擇 ACT MEDIA？", desc: "直擊品牌痛點，提供高彈性、跨地域與無縫整合的解決方案。",
+          cards: [
+            { title: "需要極速反應？", desc: "外包溝通成本太高？我們擁有<strong>獨立錄音室、直播室與自有製作團隊</strong>，即刻修改不需等，以最高效率與彈性回應您的需求。" },
+            { title: "拓展雙港台市場？", desc: "香港唯一在台設立實體辦公室的廣告公司。<strong>港台雙總部無縫接軌</strong>，專為亞洲市場提供最「在地化」的創意與產品測試。" },
+            { title: "線上線下太零碎？", desc: "多個代理商難以管理？公司內設行銷、美術、製作及產品部，從<strong>戶外大型廣告到 KOL 社群操作</strong>，我們為您一站式全包。" }
+          ]
+        },
+        services: {
+          title: "全方位整合服務", desc: "透過圖示化分類，找到最適合您當前階段的行銷利器。", btnQuote: "索取客製化服務報價",
+          cards: [
+            { title: "數位行銷 Digital Marketing", desc: "SEO/SEM 優化、社群媒體經營 (FB/IG)、小紅書戰略推廣、網紅 KOL 及 YouTuber 精準合作對接。" },
+            { title: "戶外與線下廣告 OOH", desc: "港鐵、巴士、電車車體廣告，大型戶外 LED 螢幕採購，以及實體路演 (Roadshow) 企劃執行。" },
+            { title: "創意與影音製作 Creative", desc: "商業廣告設計、本土化影音拍攝製作、電視廣告 (TVC) 統籌與專業文案翻譯服務。" },
+            { title: "公關與活動策劃 PR & Event", desc: "大型品牌發表會、電競比賽籌辦、粉絲見面會統籌，以及專業新聞稿發布與媒體公關操作。" },
+            { title: "網站設計 Website Design", desc: "企業形象網站建置、電商平台開發、SEO 架構優化以及穩定的後台系統技術支援。" }
+          ]
+        },
+        portfolio: {
+          title: "實力見證：成功案例", desc: "跨足遊戲推廣、快消品、大型活動等多元產業，展現全方位整合實力。",
+          filters: { all: "全部作品", game: "遊戲與娛樂推廣", fmcg: "快消與餐飲品牌", event: "實體活動與展會", web: "網站與數位設計" },
+          items: [
+            { id: 1, title: 'PUBG Mobile (絕地求生)', desc: '東南亞與越南市場直播推廣及精華影片剪輯' },
+            { id: 2, title: '遊戲王 CROSS DUEL', desc: '動漫節千人實體活動統籌與網紅合作推廣' },
+            { id: 3, title: '王國紀元 Lords Mobile', desc: '台港知名網紅遊戲直播操作與深度公會社群經營' },
+            { id: 4, title: '老虎堂 Tiger Sugar', desc: '台灣知名黑糖珍珠奶茶品牌跨國推廣與視覺行銷' },
+            { id: 5, title: 'LiHO 里喝', desc: '新馬最大連鎖茶飲品牌社群推廣，粉絲專頁人數突破十萬' },
+            { id: 6, title: 'GERMAGIC', desc: '長效防疫殺菌塗層品牌網站設計與線上數位行銷' },
+            { id: 7, title: '老協珍', desc: '知名保健食品品牌代言人全方位整合推廣' }
+          ],
+          logoTitle: "合作客戶與信賴品牌"
+        },
+        about: {
+          est: "成立於 2006 年", estSub: "自有獨立錄音室、直播室與拍攝團隊", title: "關於 ACT MEDIA", desc: "ACT MEDIA 戶動媒體深耕廣告領域十餘載。我們不僅是一間廣告代理商，更是您品牌「行動派的戰略夥伴」。內部完善的四大部門架構，確保每一個創意都能被精準執行、完美落地。",
+          depts: [
+            { title: "行銷部 (Marketing)", desc: "精準市場定位，數據驅動行銷策略制定。" },
+            { title: "美術部 (Art & Design)", desc: "深諳在地化視覺語彙，打造吸睛品牌形象。" },
+            { title: "製作部 (Production)", desc: "強大硬體支援，從錄音、直播到高規格影音拍攝。" },
+            { title: "產品部 (Product)", desc: "社群風向測試與產品在地化調研，降低試錯成本。" }
+          ]
+        },
+        contact: {
+          title: "準備好讓想像成真了嗎？", desc: "留下您的需求，我們的專業團隊將在 24 小時內與您聯繫，提供專屬的整合行銷提案。",
+          hq: "台灣總部 (HQ)", hqAddr: "台北市大安區信義路四段380號3樓",
+          formTitle: "立即索取提案", company: "公司名稱 *", companyPh: "請輸入貴公司名稱", name: "聯絡人姓名 *", namePh: "怎麼稱呼您？", email: "電子郵件 *", emailPh: "your@email.com", phone: "聯絡電話", phonePh: "請輸入聯絡電話",
+          service: "需求服務類型 *", servicePh: "請選擇主要需求...", services: ["數位行銷與社群經營", "戶外與線下廣告", "影音拍攝與創意製作", "公關與活動策劃", "網站設計與開發", "全方位整合方案"],
+          budget: "預算範圍", budgetPh: "請選擇預估預算...", budgets: ["HKD $50,000 以下", "HKD $50,000 - $150,000", "HKD $150,000 - $500,000", "HKD $500,000 以上", "尚未決定 / 需討論"],
+          note: "補充說明", notePh: "簡單描述您的專案目標或目前遇到的行銷挑戰...", btnSubmit: "送出詢價"
+        },
+        footer: "ACT MEDIA 戶動媒體股份有限公司. All Rights Reserved.", fab: "線上即時諮詢"
+      },
+      en: {
+        nav: { home: "Home", whyUs: "Why Us", services: "Services", portfolio: "Portfolio", about: "About", contact: "Get a Quote" },
+        hero: { tag: "The Action Agency", title1: "Action Agency", title2: "Bringing Your Marketing Imagination to Life", desc: "One-stop integration & media buying. From concept ideation and cross-border localization testing to high-end media placement, we help you penetrate the Asian market.", btnContact: "Contact Us Now", btnPortfolio: "View Our Work" },
+        whyUs: { 
+          title: "Why Top Brands Choose ACT MEDIA?", desc: "Directly addressing brand pain points with high flexibility, cross-regional reach, and seamless integration.",
+          cards: [
+            { title: "Need Lightning-Fast Response?", desc: "Outsourcing communication costs too high? We have <strong>independent recording studios, live-streaming rooms, and in-house production teams</strong> to respond to your needs with maximum efficiency." },
+            { title: "Expanding to HK & TW Markets?", desc: "The only HK advertising agency with a physical office in Taiwan. <strong>Seamless integration between HK and TW headquarters</strong>, providing the most 'localized' creative and product testing." },
+            { title: "Fragmented Online & Offline?", desc: "Too many agencies to manage? Our in-house Marketing, Art, Production, and Product departments cover everything from <strong>OOH billboards to KOL social media operations</strong> in one stop." }
+          ]
+        },
+        services: {
+          title: "End-to-End Services", desc: "Find the best marketing tools suited for your current stage.", btnQuote: "Request a Custom Quote",
+          cards: [
+            { title: "Digital Marketing", desc: "SEO/SEM optimization, social media management (FB/IG), Xiaohongshu promotion, and precise KOL/YouTuber matchmaking." },
+            { title: "OOH & Offline Advertising", desc: "MTR, bus, and tram body advertising, large outdoor LED screen procurement, and physical roadshow execution." },
+            { title: "Creative & Video Production", desc: "Commercial advertising design, localized video shooting, TVC coordination, and professional copywriting/translation." },
+            { title: "PR & Event Planning", desc: "Large-scale brand launches, esports tournaments, fan meetings, press releases, and media PR operations." },
+            { title: "Website Design", desc: "Corporate image website building, e-commerce development, SEO architecture, and backend technical support." }
+          ]
+        },
+        portfolio: {
+          title: "Proven Track Record", desc: "Spanning across gaming, FMCG, and large-scale events, showcasing our all-around integration capabilities.",
+          filters: { all: "All Work", game: "Gaming & Entertainment", fmcg: "FMCG & F&B", event: "Physical Events", web: "Web & Digital" },
+          items: [
+            { id: 1, title: 'PUBG Mobile', desc: 'Southeast Asia and Vietnam market live streaming promotion and highlight video editing.' },
+            { id: 2, title: 'Yu-Gi-Oh! CROSS DUEL', desc: 'Animation festival thousand-people physical event coordination and KOL promotion.' },
+            { id: 3, title: 'Lords Mobile', desc: 'TW/HK top KOL game streaming operations and deep guild community management.' },
+            { id: 4, title: 'Tiger Sugar', desc: 'Taiwan\'s famous brown sugar boba brand cross-border promotion and visual marketing.' },
+            { id: 5, title: 'LiHO', desc: 'Singapore & Malaysia\'s largest tea brand social media promotion, breaking 100k followers.' },
+            { id: 6, title: 'GERMAGIC', desc: 'Long-lasting anti-epidemic coating brand website design and online digital marketing.' },
+            { id: 7, title: 'Lao Xie Zhen', desc: 'Famous health food brand spokesperson all-around integrated promotion.' }
+          ],
+          logoTitle: "Trusted By"
+        },
+        about: {
+          est: "Established in 2006", estSub: "In-house recording studios and production teams", title: "About ACT MEDIA", desc: "Deeply rooted in the advertising industry for over a decade. We are not just an agency, but your brand's 'Action-Oriented Strategic Partner'. Our four comprehensive departments ensure every idea is perfectly executed.",
+          depts: [
+            { title: "Marketing", desc: "Precise market positioning and data-driven strategy formulation." },
+            { title: "Art & Design", desc: "Deep understanding of localized visual language to create eye-catching brand images." },
+            { title: "Production", desc: "Strong hardware support, from recording and live-streaming to high-spec video shooting." },
+            { title: "Product", desc: "Social trend testing and product localization research to reduce trial and error costs." }
+          ]
+        },
+        contact: {
+          title: "Ready to make it happen?", desc: "Leave us your requirements, and our professional team will contact you within 24 hours with a customized proposal.",
+          hq: "Taiwan Branch", hqAddr: "3F., No. 380, Sec. 4, Xinyi Rd., Da’an Dist., Taipei City",
+          formTitle: "Request a Proposal", company: "Company Name *", companyPh: "Enter your company name", name: "Contact Name *", namePh: "How should we address you?", email: "Email Address *", emailPh: "your@email.com", phone: "Phone Number", phonePh: "Enter phone number",
+          service: "Required Service *", servicePh: "Select a service...", services: ["Digital Marketing & Social", "OOH & Offline Ads", "Video & Creative Production", "PR & Event Planning", "Website Design & Dev", "Full-Service Integration"],
+          budget: "Budget Range", budgetPh: "Select estimated budget...", budgets: ["Below HKD $50,000", "HKD $50,000 - $150,000", "HKD $150,000 - $500,000", "Above HKD $500,000", "To be discussed"],
+          note: "Additional Notes", notePh: "Briefly describe your project goals or marketing challenges...", btnSubmit: "Submit Request"
+        },
+        footer: "ACT MEDIA Co., Ltd. All Rights Reserved.", fab: "Live Chat"
       }
     };
 
     const App = () => {
+      const [lang, setLang] = useState('zh');
       const [isMenuOpen, setIsMenuOpen] = useState(false);
       const [activeFilter, setActiveFilter] = useState('all');
+      
+      const t = dict[lang];
 
-      // AI 靈感引擎狀態
-      const [aiInput, setAiInput] = useState({ brand: '', audience: '' });
-      const [aiResult, setAiResult] = useState('');
-      const [isGeneratingInspiration, setIsGeneratingInspiration] = useState(false);
-      const [aiError, setAiError] = useState('');
-
-      // 聯絡表單狀態
-      const [formData, setFormData] = useState({ notes: '' });
-      const [isExpandingNotes, setIsExpandingNotes] = useState(false);
-
-      // 呼叫 Gemini API 產生行銷靈感
-      const handleGenerateInspiration = async () => {
-        if (!aiInput.brand || !aiInput.audience) {
-          setAiError('請輸入品牌名稱與目標受眾');
-          return;
-        }
-        
-        setIsGeneratingInspiration(true);
-        setAiError('');
-        setAiResult('');
-
-        const prompt = `你是一位頂尖的廣告創意總監。請根據以下資訊，為客戶構思一個大膽且具備話題性的行銷活動點子。
-          產品/品牌：${aiInput.brand}
-          目標受眾：${aiInput.audience}
-          請分點列出：
-          1. 創意活動主題 (Hook)
-          2. 核心概念 (Concept)
-          3. 建議的傳播管道 (Channels)
-          字數約 150-200 字，語氣充滿熱情與說服力，不要使用 Markdown 標題符號，使用純文字排版即可。`;
-
-        try {
-          if(!apiKey) {
-            throw new Error('API Key is missing');
-          }
-
-          const result = await fetchWithRetry(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-              })
-            }
-          );
-          
-          const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (text) {
-            setAiResult(text);
-          } else {
-            setAiError('產生失敗，請稍後再試。');
-          }
-        } catch (err) {
-          if(err.message === 'API Key is missing') {
-             setAiError('請在程式碼中設定您的 API Key 以啟用此功能。');
-          } else {
-             setAiError('網路連線發生錯誤，請稍後再試。');
-          }
-        } finally {
-          setIsGeneratingInspiration(false);
-        }
-      };
-
-      // 呼叫 Gemini API 擴充表單需求描述
-      const handleExpandNotes = async () => {
-        if (!formData.notes) return;
-        
-        setIsExpandingNotes(true);
-        
-        const prompt = `我正在填寫廣告代理商的需求表單。這是我目前的初步想法：
-        「${formData.notes}」
-        請幫我將這段文字擴充、潤飾成更專業的專案需求簡述，讓廣告公司更能理解我的痛點與期待。請直接輸出潤飾後的文字，不需要開場白，字數約 100 字以內。`;
-
-        try {
-          if(!apiKey) {
-            throw new Error('API Key is missing');
-          }
-
-          const result = await fetchWithRetry(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-              })
-            }
-          );
-          
-          const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (text) {
-            setFormData(prev => ({ ...prev, notes: text.trim() }));
-          }
-        } catch (err) {
-          console.error('Failed to expand notes', err);
-          if(err.message === 'API Key is missing') {
-             alert('請在程式碼中設定您的 API Key 以啟用 AI 潤飾功能。');
-          }
-        } finally {
-          setIsExpandingNotes(false);
-        }
-      };
-
-      // 根據 PDF 內容更新的真實作品集資料
-      const portfolioData = [
-        { id: 1, title: 'PUBG Mobile (絕地求生)', category: 'game', desc: '東南亞與越南市場直播推廣及精華影片剪輯', image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800', alt: '' },
-        { id: 2, title: '遊戲王 CROSS DUEL', category: 'event', desc: '動漫節千人實體活動統籌與網紅 (微辣/蔥蔥) 合作推廣', image: 'https://images.unsplash.com/photo-1605901309584-818e25960b8f?auto=format&fit=crop&q=80&w=800', alt: '' },
-        { id: 3, title: '王國紀元 Lords Mobile', category: 'game', desc: '台港知名網紅遊戲直播操作與深度公會社群經營', image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=800', alt: '' },
-        { id: 4, title: '老虎堂 Tiger Sugar', category: 'fmcg', desc: '台灣知名黑糖珍珠奶茶品牌跨國推廣與視覺行銷', image: 'https://images.unsplash.com/photo-1558855567-1a440618ff81?auto=format&fit=crop&q=80&w=800', alt: '' },
-        { id: 5, title: 'LiHO 里喝', category: 'fmcg', desc: '新馬最大連鎖茶飲品牌社群推廣，粉絲專頁突破十萬', image: 'https://images.unsplash.com/photo-1576092762791-dd9e2220afa1?auto=format&fit=crop&q=80&w=800', alt: '' },
-        { id: 6, title: 'GERMAGIC (Bioprotectus)', category: 'web', desc: '長效防疫殺菌塗層品牌網站設計與線上數位行銷', image: 'https://images.unsplash.com/photo-1584308666744-24d5e478ac69?auto=format&fit=crop&q=80&w=800', alt: '' },
-        { id: 7, title: '老協珍', category: 'fmcg', desc: '知名保健食品品牌代言人全方位整合推廣', image: 'https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?auto=format&fit=crop&q=80&w=800', alt: '' },
+      const portfolioItems = [
+        { ...t.portfolio.items[0], category: 'game', image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800' },
+        { ...t.portfolio.items[1], category: 'event', image: 'https://images.unsplash.com/photo-1605901309584-818e25960b8f?auto=format&fit=crop&q=80&w=800' },
+        { ...t.portfolio.items[2], category: 'game', image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=800' },
+        { ...t.portfolio.items[3], category: 'fmcg', image: 'https://images.unsplash.com/photo-1558855567-1a440618ff81?auto=format&fit=crop&q=80&w=800' },
+        { ...t.portfolio.items[4], category: 'fmcg', image: 'https://images.unsplash.com/photo-1576092762791-dd9e2220afa1?auto=format&fit=crop&q=80&w=800' },
+        { ...t.portfolio.items[5], category: 'web', image: 'https://images.unsplash.com/photo-1584308666744-24d5e478ac69?auto=format&fit=crop&q=80&w=800' },
+        { ...t.portfolio.items[6], category: 'fmcg', image: 'https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?auto=format&fit=crop&q=80&w=800' },
       ];
 
-      const filteredPortfolio = activeFilter === 'all' 
-        ? portfolioData 
-        : portfolioData.filter(item => item.category === activeFilter);
+      const filteredPortfolio = activeFilter === 'all' ? portfolioItems : portfolioItems.filter(item => item.category === activeFilter);
+      const toggleLang = () => setLang(lang === 'zh' ? 'en' : 'zh');
 
       return (
         <div className="font-sans text-slate-800 bg-white">
-          {/* 導覽列 Navigation */}
+          {/* Navigation */}
           <nav className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50 transition-all">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center h-20">
-                {/* Logo */}
                 <div className="flex-shrink-0 flex items-center cursor-pointer">
                   <span className="text-2xl font-black tracking-tighter text-slate-900">
                     ACT<span className="text-orange-600">MEDIA</span>
                   </span>
                 </div>
                 
-                {/* Desktop Menu */}
                 <div className="hidden md:flex space-x-8 items-center">
-                  <a href="#home" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">首頁</a>
-                  <a href="#why-us" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">核心優勢</a>
-                  <a href="#services" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">專業服務</a>
-                  <a href="#portfolio" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">成功案例</a>
-                  <a href="#about" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">關於我們</a>
+                  <a href="#home" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">{t.nav.home}</a>
+                  <a href="#why-us" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">{t.nav.whyUs}</a>
+                  <a href="#services" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">{t.nav.services}</a>
+                  <a href="#portfolio" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">{t.nav.portfolio}</a>
+                  <a href="#about" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">{t.nav.about}</a>
+                  <button onClick={toggleLang} className="text-sm font-bold text-slate-800 hover:text-orange-600 border px-3 py-1 rounded-md transition-colors">
+                    {lang === 'zh' ? 'EN' : '中文'}
+                  </button>
                   <a href="#contact" className="px-6 py-2.5 bg-orange-600 text-white text-sm font-medium rounded-full hover:bg-orange-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                    取得提案
+                    {t.nav.contact}
                   </a>
                 </div>
 
-                {/* Mobile Menu Button */}
-                <div className="md:hidden flex items-center">
+                <div className="md:hidden flex items-center gap-4">
+                  <button onClick={toggleLang} className="text-sm font-bold text-slate-800 border px-2 py-1 rounded-md">
+                    {lang === 'zh' ? 'EN' : '中'}
+                  </button>
                   <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-slate-600 hover:text-orange-600">
                     {isMenuOpen ? <i className="fa-solid fa-xmark text-[24px]"></i> : <i className="fa-solid fa-bars text-[24px]"></i>}
                   </button>
@@ -194,19 +188,18 @@
               </div>
             </div>
 
-            {/* Mobile Menu Panel */}
             {isMenuOpen && (
               <div className="md:hidden bg-white border-t">
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                  <a href="#services" className="block px-3 py-2 text-base font-medium text-slate-600">專業服務</a>
-                  <a href="#portfolio" className="block px-3 py-2 text-base font-medium text-slate-600">成功案例</a>
-                  <a href="#contact" className="block px-3 py-2 text-base font-medium text-orange-600">取得提案</a>
+                  <a href="#services" className="block px-3 py-2 text-base font-medium text-slate-600">{t.nav.services}</a>
+                  <a href="#portfolio" className="block px-3 py-2 text-base font-medium text-slate-600">{t.nav.portfolio}</a>
+                  <a href="#contact" className="block px-3 py-2 text-base font-medium text-orange-600">{t.nav.contact}</a>
                 </div>
               </div>
             )}
           </nav>
 
-          {/* 首屏 Hero Section */}
+          {/* Hero Section */}
           <section id="home" className="relative pt-20 pb-32 lg:pt-32 lg:pb-48 overflow-hidden bg-slate-900">
             <div className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1558442074-3c19857bc1dc?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center mix-blend-overlay"></div>
             <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent"></div>
@@ -214,144 +207,107 @@
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
               <div className="max-w-3xl">
                 <div className="inline-block px-4 py-1.5 rounded-full bg-orange-500/20 text-orange-400 font-semibold text-sm mb-6 border border-orange-500/30">
-                  The Action Agency
+                  {t.hero.tag}
                 </div>
                 <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight mb-6">
-                  行動機構<br />
+                  {t.hero.title1}<br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
-                    讓你的行銷想像完美落地
+                    {t.hero.title2}
                   </span>
                 </h1>
                 <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl leading-relaxed">
-                  一站式全方位整合與媒體採購。從概念發想、跨國在地化測試到高階媒體投放，我們助您精準切入亞洲市場，讓想像成真。
+                  {t.hero.desc}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a href="#contact" className="inline-flex justify-center items-center px-8 py-4 text-base font-bold rounded-full text-white bg-orange-600 hover:bg-orange-700 transition-all shadow-lg hover:shadow-orange-600/30">
-                    立即聯絡我們
+                    {t.hero.btnContact}
                     <i className="fa-solid fa-chevron-right ml-2 text-[20px]"></i>
                   </a>
                   <a href="#portfolio" className="inline-flex justify-center items-center px-8 py-4 text-base font-bold rounded-full text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all border border-white/20">
-                    觀看成功案例
+                    {t.hero.btnPortfolio}
                   </a>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* 核心優勢 Why Choose Us */}
+          {/* Why Choose Us */}
           <section id="why-us" className="py-24 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center max-w-3xl mx-auto mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">為什麼各大品牌選擇 ACT MEDIA？</h2>
-                <p className="text-slate-600 text-lg">直擊品牌痛點，提供高彈性、跨地域與無縫整合的解決方案。</p>
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t.whyUs.title}</h2>
+                <p className="text-slate-600 text-lg">{t.whyUs.desc}</p>
               </div>
 
               <div className="grid md:grid-cols-3 gap-8">
-                {/* USP 1 */}
                 <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow border border-slate-100 group">
                   <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <i className="fa-solid fa-rocket text-orange-600 text-[28px]"></i>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">需要極速反應？</h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    外包溝通成本太高？我們擁有<strong className="text-slate-800">獨立錄音室、直播室與自有製作團隊</strong>，即刻修改不需等，以最高效率與彈性回應您的需求。
-                  </p>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">{t.whyUs.cards[0].title}</h3>
+                  <p className="text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{__html: t.whyUs.cards[0].desc}}></p>
                 </div>
-
-                {/* USP 2 */}
                 <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow border border-slate-100 group">
                   <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <i className="fa-solid fa-globe text-blue-600 text-[28px]"></i>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">拓展雙港台市場？</h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    香港唯一在台設立實體辦公室的廣告公司。<strong className="text-slate-800">港台雙總部無縫接軌</strong>，專為亞洲市場提供最「在地化」的創意與產品測試。
-                  </p>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">{t.whyUs.cards[1].title}</h3>
+                  <p className="text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{__html: t.whyUs.cards[1].desc}}></p>
                 </div>
-
-                {/* USP 3 */}
                 <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow border border-slate-100 group">
                   <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <i className="fa-solid fa-layer-group text-purple-600 text-[28px]"></i>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">線上線下太零碎？</h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    多個代理商難以管理？公司內設行銷、美術、製作及產品部，從<strong className="text-slate-800">戶外大型廣告到 KOL 社群操作</strong>，我們為您一站式全包。
-                  </p>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">{t.whyUs.cards[2].title}</h3>
+                  <p className="text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{__html: t.whyUs.cards[2].desc}}></p>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* 專業服務 Our Services */}
+          {/* Services */}
           <section id="services" className="py-24 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="mb-16 md:flex md:justify-between md:items-end">
                 <div className="max-w-2xl">
-                  <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">全方位整合服務</h2>
-                  <p className="text-slate-600 text-lg">透過圖示化分類，找到最適合您當前階段的行銷利器。</p>
+                  <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t.services.title}</h2>
+                  <p className="text-slate-600 text-lg">{t.services.desc}</p>
                 </div>
                 <a href="#contact" className="hidden md:inline-flex items-center font-semibold text-orange-600 hover:text-orange-700">
-                  索取客製化服務報價 <i className="fa-solid fa-chevron-right text-[16px] ml-1"></i>
+                  {t.services.btnQuote} <i className="fa-solid fa-chevron-right text-[16px] ml-1"></i>
                 </a>
               </div>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="p-6 border border-slate-100 rounded-2xl hover:border-orange-200 hover:bg-orange-50/30 transition-colors">
-                  <i className="fa-solid fa-mobile-screen text-[40px] text-slate-700 mb-4"></i>
-                  <h4 className="text-lg font-bold text-slate-900 mb-2">數位行銷 Digital Marketing</h4>
-                  <p className="text-slate-500 text-sm leading-relaxed">
-                    SEO/SEM 優化、社群媒體經營 (FB/IG)、小紅書戰略推廣、網紅 KOL 及 YouTuber 精準合作對接。
-                  </p>
-                </div>
-                <div className="p-6 border border-slate-100 rounded-2xl hover:border-orange-200 hover:bg-orange-50/30 transition-colors">
-                  <i className="fa-solid fa-map text-[40px] text-slate-700 mb-4"></i>
-                  <h4 className="text-lg font-bold text-slate-900 mb-2">戶外與線下廣告 OOH</h4>
-                  <p className="text-slate-500 text-sm leading-relaxed">
-                    港鐵、巴士、電車車體廣告，大型戶外 LED 螢幕採購，以及實體路演 (Roadshow) 企劃執行。
-                  </p>
-                </div>
-                <div className="p-6 border border-slate-100 rounded-2xl hover:border-orange-200 hover:bg-orange-50/30 transition-colors">
-                  <i className="fa-solid fa-video text-[40px] text-slate-700 mb-4"></i>
-                  <h4 className="text-lg font-bold text-slate-900 mb-2">創意與影音製作 Creative</h4>
-                  <p className="text-slate-500 text-sm leading-relaxed">
-                    商業廣告設計、本土化影音拍攝製作、電視廣告 (TVC) 統籌與專業文案翻譯服務。
-                  </p>
-                </div>
-                <div className="p-6 border border-slate-100 rounded-2xl hover:border-orange-200 hover:bg-orange-50/30 transition-colors">
-                  <i className="fa-solid fa-microphone text-[40px] text-slate-700 mb-4"></i>
-                  <h4 className="text-lg font-bold text-slate-900 mb-2">公關與活動策劃 PR & Event</h4>
-                  <p className="text-slate-500 text-sm leading-relaxed">
-                    大型品牌發表會、電競比賽籌辦、粉絲見面會統籌，以及專業新聞稿發布與媒體公關操作。
-                  </p>
-                </div>
-                <div className="p-6 border border-slate-100 rounded-2xl hover:border-orange-200 hover:bg-orange-50/30 transition-colors">
-                  <i className="fa-solid fa-table-columns text-[40px] text-slate-700 mb-4"></i>
-                  <h4 className="text-lg font-bold text-slate-900 mb-2">網站設計 Website Design</h4>
-                  <p className="text-slate-500 text-sm leading-relaxed">
-                    企業形象網站建置、電商平台開發、SEO 架構優化以及穩定的後台系統技術支援。
-                  </p>
-                </div>
+                {[
+                  { icon: "fa-mobile-screen", i: 0 }, { icon: "fa-map", i: 1 }, 
+                  { icon: "fa-video", i: 2 }, { icon: "fa-microphone", i: 3 }, { icon: "fa-table-columns", i: 4 }
+                ].map((item) => (
+                  <div key={item.i} className="p-6 border border-slate-100 rounded-2xl hover:border-orange-200 hover:bg-orange-50/30 transition-colors">
+                    <i className={`fa-solid ${item.icon} text-[40px] text-slate-700 mb-4`}></i>
+                    <h4 className="text-lg font-bold text-slate-900 mb-2">{t.services.cards[item.i].title}</h4>
+                    <p className="text-slate-500 text-sm leading-relaxed">{t.services.cards[item.i].desc}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </section>
 
-          {/* 成功案例 Portfolio */}
+          {/* Portfolio */}
           <section id="portfolio" className="py-24 bg-slate-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">實力見證：成功案例</h2>
-                <p className="text-slate-600 text-lg">跨足遊戲推廣、快消品、大型活動等多元產業，展現全方位整合實力。</p>
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t.portfolio.title}</h2>
+                <p className="text-slate-600 text-lg">{t.portfolio.desc}</p>
               </div>
 
-              {/* Filters */}
               <div className="flex flex-wrap justify-center gap-3 mb-12">
                 {[
-                  { id: 'all', label: '全部作品' },
-                  { id: 'game', label: '遊戲與娛樂推廣' },
-                  { id: 'fmcg', label: '快消與餐飲品牌' },
-                  { id: 'event', label: '實體活動與展會' },
-                  { id: 'web', label: '網站與數位設計' },
+                  { id: 'all', label: t.portfolio.filters.all },
+                  { id: 'game', label: t.portfolio.filters.game },
+                  { id: 'fmcg', label: t.portfolio.filters.fmcg },
+                  { id: 'event', label: t.portfolio.filters.event },
+                  { id: 'web', label: t.portfolio.filters.web },
                 ].map(filter => (
                   <button
                     key={filter.id}
@@ -367,12 +323,11 @@
                 ))}
               </div>
 
-              {/* Grid */}
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredPortfolio.map(item => (
                   <div key={item.id} className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100">
                     <div className="h-48 flex items-center justify-center relative overflow-hidden bg-slate-100">
-                      <img src={item.image} alt={item.alt} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                      <img src={item.image} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                       <div className="absolute inset-0 bg-slate-900/20 group-hover:bg-transparent transition-colors duration-500"></div>
                     </div>
                     <div className="p-6">
@@ -383,170 +338,86 @@
                 ))}
               </div>
 
-              {/* Logo Wall */}
               <div className="mt-24 pt-16 border-t border-slate-200">
-                <p className="text-center text-sm font-semibold text-slate-500 tracking-wider mb-8 uppercase">合作客戶與信賴品牌</p>
-                <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                  {['PUBG Mobile', 'KONAMI', 'MAD HEAD', '老虎堂', '大家樂', 'Godiva', '老協珍'].map((logo, idx) => (
-                    <div key={idx} className="text-xl font-black text-slate-400">
-                      {logo}
-                    </div>
+                <p className="text-center text-sm font-semibold text-slate-500 tracking-wider mb-8 uppercase">{t.portfolio.logoTitle}</p>
+                <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 transition-all duration-500">
+                  {[
+                    { src: 'logos/c1.jpg', alt: '中信銀行' },
+                    { src: 'logos/c2.jpg', alt: 'BCT 銀聯集團' },
+                    { src: 'logos/c3.jpg', alt: '道' },
+                    { src: 'logos/c4.jpg', alt: 'ByteDance 字节跳动' },
+                    { src: 'logos/c5.jpg', alt: 'KOMOE' },
+                    { src: 'logos/c6.jpg', alt: '智冠科技' },
+                    { src: 'logos/c7.jpg', alt: '7SENSES' },
+                    { src: 'logos/c8.jpg', alt: 'AIDS CONCERN 關懷愛滋' },
+                    { src: 'logos/c9.jpg', alt: 'Alibaba.com' },
+                    { src: 'logos/c10.jpg', alt: 'efunfun' }
+                  ].map((logo, idx) => (
+                    <img key={idx} src={logo.src} alt={logo.alt} className="h-10 md:h-14 object-contain opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300" />
                   ))}
                 </div>
               </div>
             </div>
           </section>
 
-          {/* 關於我們 About Us */}
+          {/* About Us */}
           <section id="about" className="py-24 bg-white overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
                 <div className="mb-12 lg:mb-0 relative">
                   <div className="aspect-square rounded-full bg-orange-50 absolute -top-12 -left-12 w-64 h-64 -z-10"></div>
                   <div className="bg-slate-100 rounded-3xl h-96 w-full flex items-center justify-center relative overflow-hidden shadow-lg group">
-                    <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=1000" alt="獨立錄音室與專業攝影棚" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=1000" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent"></div>
                     <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur p-6 rounded-2xl shadow-xl transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                       <p className="font-bold text-slate-900 text-lg mb-1">成立於 2006 年</p>
-                       <p className="text-orange-600 font-medium">自有獨立錄音室、直播室與拍攝團隊</p>
+                       <p className="font-bold text-slate-900 text-lg mb-1">{t.about.est}</p>
+                       <p className="text-orange-600 font-medium">{t.about.estSub}</p>
                     </div>
                   </div>
                 </div>
                 
                 <div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">關於 ACT MEDIA</h2>
-                  <p className="text-slate-600 text-lg leading-relaxed mb-8">
-                    ACT MEDIA 戶動媒體深耕廣告領域十餘載。我們不僅是一間廣告代理商，更是您品牌「行動派的戰略夥伴」。內部完善的四大部門架構，確保每一個創意都能被精準執行、完美落地。
-                  </p>
+                  <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">{t.about.title}</h2>
+                  <p className="text-slate-600 text-lg leading-relaxed mb-8">{t.about.desc}</p>
                   
                   <div className="space-y-6">
-                    <div className="flex">
-                      <div className="flex-shrink-0 mt-1"><div className="w-2 h-2 rounded-full bg-orange-600"></div></div>
-                      <div className="ml-4">
-                        <h4 className="text-lg font-bold text-slate-900">行銷部 (Marketing)</h4>
-                        <p className="text-slate-600 text-sm mt-1">精準市場定位，數據驅動行銷策略制定。</p>
+                    {t.about.depts.map((dept, idx) => (
+                      <div className="flex" key={idx}>
+                        <div className="flex-shrink-0 mt-1"><div className="w-2 h-2 rounded-full bg-orange-600"></div></div>
+                        <div className="ml-4">
+                          <h4 className="text-lg font-bold text-slate-900">{dept.title}</h4>
+                          <p className="text-slate-600 text-sm mt-1">{dept.desc}</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex">
-                      <div className="flex-shrink-0 mt-1"><div className="w-2 h-2 rounded-full bg-orange-600"></div></div>
-                      <div className="ml-4">
-                        <h4 className="text-lg font-bold text-slate-900">美術部 (Art & Design)</h4>
-                        <p className="text-slate-600 text-sm mt-1">深諳在地化視覺語彙，打造吸睛品牌形象。</p>
-                      </div>
-                    </div>
-                    <div className="flex">
-                      <div className="flex-shrink-0 mt-1"><div className="w-2 h-2 rounded-full bg-orange-600"></div></div>
-                      <div className="ml-4">
-                        <h4 className="text-lg font-bold text-slate-900">製作部 (Production)</h4>
-                        <p className="text-slate-600 text-sm mt-1">強大硬體支援，從錄音、直播到高規格影音拍攝。</p>
-                      </div>
-                    </div>
-                    <div className="flex">
-                      <div className="flex-shrink-0 mt-1"><div className="w-2 h-2 rounded-full bg-orange-600"></div></div>
-                      <div className="ml-4">
-                        <h4 className="text-lg font-bold text-slate-900">產品部 (Product)</h4>
-                        <p className="text-slate-600 text-sm mt-1">社群風向測試與產品在地化調研，降低試錯成本。</p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* AI 行銷靈感引擎 (Gemini Feature) */}
-          <section id="ai-generator" className="py-20 bg-gradient-to-br from-orange-50 to-red-50 relative overflow-hidden">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-              <div className="text-center mb-10">
-                <div className="inline-flex items-center justify-center p-3 bg-white rounded-full shadow-sm text-orange-600 mb-4">
-                  <i className="fa-solid fa-wand-magic-sparkles text-[24px]"></i>
-                </div>
-                <h2 className="text-3xl font-bold text-slate-900 mb-4">缺乏行銷靈感？讓 AI 創意總監為您激盪</h2>
-                <p className="text-slate-600 text-lg">輸入您的品牌與客群，我們將立即為您生成專屬的創意提案起手式。</p>
-              </div>
-
-              <div className="bg-white rounded-3xl shadow-xl p-8 border border-orange-100">
-                <div className="grid md:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">您的品牌或產品名稱</label>
-                    <input 
-                      type="text" 
-                      value={aiInput.brand}
-                      onChange={(e) => setAiInput(prev => ({ ...prev, brand: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 outline-none transition-all" 
-                      placeholder="例如：Sainderma 頂級保養品" 
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">想打動的目標受眾 (TA)</label>
-                    <input 
-                      type="text" 
-                      value={aiInput.audience}
-                      onChange={(e) => setAiInput(prev => ({ ...prev, audience: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 outline-none transition-all" 
-                      placeholder="例如：25-35歲重視質感的都會女性" 
-                    />
-                  </div>
-                </div>
-                
-                <button 
-                  onClick={handleGenerateInspiration}
-                  disabled={isGeneratingInspiration}
-                  className="w-full md:w-auto mx-auto flex items-center justify-center px-8 py-4 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg"
-                >
-                  {isGeneratingInspiration ? (
-                    <><i className="fa-solid fa-spinner fa-spin text-[20px] mr-2"></i> 創意激盪中...</>
-                  ) : (
-                    <>✨ 產生專屬行銷靈感</>
-                  )}
-                </button>
-
-                {aiError && <p className="text-red-500 text-sm mt-4 text-center">{aiError}</p>}
-
-                {aiResult && (
-                  <div className="mt-8 p-6 bg-orange-50 rounded-2xl border border-orange-100 fade-in">
-                    <h4 className="text-orange-800 font-bold mb-3 flex items-center">
-                      <i className="fa-solid fa-wand-magic-sparkles text-[20px] mr-2"></i> 您的專屬創意靈感：
-                    </h4>
-                    <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{aiResult}</p>
-                    <div className="mt-6 text-center">
-                      <p className="text-sm text-slate-500 mb-3">覺得這個點子不錯？讓我們幫您把想像完美落地！</p>
-                      <a href="#contact" className="inline-block px-6 py-2 bg-slate-900 text-white text-sm font-medium rounded-full hover:bg-slate-800 transition-colors">
-                        找團隊實現點子
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-
-          {/* 聯絡我們 Contact Us */}
+          {/* Contact Us */}
           <section id="contact" className="py-24 bg-slate-900 text-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="lg:grid lg:grid-cols-12 lg:gap-16">
-                
-                {/* 聯絡資訊 */}
                 <div className="lg:col-span-5 mb-16 lg:mb-0">
-                  <h2 className="text-3xl md:text-4xl font-bold mb-6">準備好讓想像成真了嗎？</h2>
-                  <p className="text-slate-400 mb-10 text-lg">
-                    留下您的需求，我們的專業團隊將在 24 小時內與您聯繫，提供專屬的整合行銷提案。
-                  </p>
+                  <h2 className="text-3xl md:text-4xl font-bold mb-6">{t.contact.title}</h2>
+                  <p className="text-slate-400 mb-10 text-lg">{t.contact.desc}</p>
 
                   <div className="space-y-8">
                     <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
                       <h4 className="text-orange-400 font-bold mb-4 flex items-center">
-                        <i className="fa-solid fa-location-dot text-[20px] mr-2"></i> 香港總部 (HQ)
+                        <i className="fa-solid fa-location-dot text-[20px] mr-2"></i> {t.contact.hq}
                       </h4>
-                      <p className="text-slate-300 text-sm mb-2">荃灣海盛路3號TML廣場25樓B6室</p>
+                      <p className="text-slate-300 text-sm mb-2">{t.contact.hqAddr}</p>
                       <p className="text-slate-300 text-sm flex items-center"><i className="fa-solid fa-phone text-[16px] mr-2"></i> +852 3111 2328</p>
                     </div>
 
                     <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
                       <h4 className="text-orange-400 font-bold mb-4 flex items-center">
-                        <i className="fa-solid fa-location-dot text-[20px] mr-2"></i> 台灣分公司
+                        <i className="fa-solid fa-location-dot text-[20px] mr-2"></i> {t.contact.tw}
                       </h4>
-                      <p className="text-slate-300 text-sm mb-2">台北市大安區信義路四段380號3樓</p>
+                      <p className="text-slate-300 text-sm mb-2">{t.contact.twAddr}</p>
                       <p className="text-slate-300 text-sm flex items-center"><i className="fa-solid fa-phone text-[16px] mr-2"></i> +886 2 7708 0766</p>
                     </div>
 
@@ -557,77 +428,56 @@
                   </div>
                 </div>
 
-                {/* 詢價表單 */}
                 <div className="lg:col-span-7">
                   <form className="bg-white rounded-3xl p-8 shadow-2xl">
-                    <h3 className="text-2xl font-bold text-slate-900 mb-6">立即索取提案</h3>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-6">{t.contact.formTitle}</h3>
                     <div className="space-y-6">
                       <div className="grid md:grid-cols-2 gap-6">
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">公司名稱 *</label>
-                          <input type="text" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900" placeholder="請輸入貴公司名稱" />
+                          <label className="block text-sm font-medium text-slate-700 mb-2">{t.contact.company}</label>
+                          <input type="text" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900" placeholder={t.contact.companyPh} />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">聯絡人姓名 *</label>
-                          <input type="text" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900" placeholder="怎麼稱呼您？" />
+                          <label className="block text-sm font-medium text-slate-700 mb-2">{t.contact.name}</label>
+                          <input type="text" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900" placeholder={t.contact.namePh} />
                         </div>
                       </div>
                       <div className="grid md:grid-cols-2 gap-6">
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">電子郵件 *</label>
-                          <input type="email" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900" placeholder="your@email.com" />
+                          <label className="block text-sm font-medium text-slate-700 mb-2">{t.contact.email}</label>
+                          <input type="email" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900" placeholder={t.contact.emailPh} />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">聯絡電話</label>
-                          <input type="tel" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900" placeholder="請輸入聯絡電話" />
+                          <label className="block text-sm font-medium text-slate-700 mb-2">{t.contact.phone}</label>
+                          <input type="tel" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900" placeholder={t.contact.phonePh} />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">需求服務類型 *</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">{t.contact.service}</label>
                         <select className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900 bg-white">
-                          <option value="">請選擇主要需求...</option>
-                          <option value="digital">數位行銷與社群經營</option>
-                          <option value="ooh">戶外與線下廣告</option>
-                          <option value="creative">影音拍攝與創意製作</option>
-                          <option value="pr">公關與活動策劃</option>
-                          <option value="web">網站設計與開發</option>
-                          <option value="full">全方位整合方案</option>
+                          <option value="">{t.contact.servicePh}</option>
+                          {t.contact.services.map((opt, i) => <option key={i} value={i}>{opt}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">預算範圍</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">{t.contact.budget}</label>
                         <select className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900 bg-white">
-                          <option value="">請選擇預估預算...</option>
-                          <option value="1">HKD $50,000 以下</option>
-                          <option value="2">HKD $50,000 - $150,000</option>
-                          <option value="3">HKD $150,000 - $500,000</option>
-                          <option value="4">HKD $500,000 以上</option>
-                          <option value="tbd">尚未決定 / 需討論</option>
+                          <option value="">{t.contact.budgetPh}</option>
+                          {t.contact.budgets.map((opt, i) => <option key={i} value={i}>{opt}</option>)}
                         </select>
                       </div>
                       <div>
                         <div className="flex justify-between items-end mb-2">
-                          <label className="block text-sm font-medium text-slate-700">補充說明</label>
-                          <button 
-                            type="button"
-                            onClick={handleExpandNotes}
-                            disabled={isExpandingNotes || !formData.notes}
-                            className="text-xs font-medium text-orange-600 hover:text-orange-700 flex items-center disabled:opacity-50 disabled:cursor-not-allowed bg-orange-50 px-2 py-1 rounded-md transition-colors"
-                          >
+                          <label className="block text-sm font-medium text-slate-700">{t.contact.note}</label>
+                          <button type="button" onClick={handleExpandNotes} disabled={isExpandingNotes || !formData.notes} className="text-xs font-medium text-orange-600 hover:text-orange-700 flex items-center disabled:opacity-50 disabled:cursor-not-allowed bg-orange-50 px-2 py-1 rounded-md transition-colors">
                             {isExpandingNotes ? <i className="fa-solid fa-spinner fa-spin text-[12px] mr-1"></i> : <i className="fa-solid fa-wand-magic-sparkles text-[12px] mr-1"></i>}
-                            ✨ AI 幫我專業潤飾
+                            {t.contact.btnAi}
                           </button>
                         </div>
-                        <textarea 
-                          rows="4" 
-                          value={formData.notes}
-                          onChange={(e) => setFormData({ notes: e.target.value })}
-                          className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900 resize-none" 
-                          placeholder="簡單描述您的專案目標或目前遇到的行銷挑戰..."
-                        ></textarea>
+                        <textarea rows="4" value={formData.notes} onChange={(e) => setFormData({ notes: e.target.value })} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900 resize-none" placeholder={t.contact.notePh}></textarea>
                       </div>
                       <button type="button" className="w-full py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-colors shadow-lg hover:shadow-xl">
-                        送出詢價
+                        {t.contact.btnSubmit}
                       </button>
                     </div>
                   </form>
@@ -638,7 +488,7 @@
 
           {/* Footer */}
           <footer className="bg-slate-950 text-slate-500 py-8 text-center text-sm border-t border-slate-800">
-            <p>&copy; {new Date().getFullYear()} ACT MEDIA 戶動媒體股份有限公司. All Rights Reserved.</p>
+            <p>&copy; {new Date().getFullYear()} {t.footer}</p>
           </footer>
 
           {/* Floating Action Button */}
@@ -646,9 +496,8 @@
             <button className="bg-green-500 hover:bg-green-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-transform transform hover:scale-110">
               <i className="fa-brands fa-whatsapp text-[28px]"></i>
             </button>
-            {/* Tooltip */}
             <div className="absolute right-16 top-1/2 -translate-y-1/2 px-3 py-2 bg-slate-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
-              線上即時諮詢
+              {t.fab}
             </div>
           </div>
         </div>
