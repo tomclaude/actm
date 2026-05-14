@@ -19,12 +19,12 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    // Dictionary for Bilingual Support
     const dict = {
       zh: {
         nav: { home: "首頁", whyUs: "核心優勢", services: "專業服務", portfolio: "成功案例", about: "關於我們", contact: "取得提案" },
         hero: { tag: "The Action Agency", title1: "行動機構", title2: "讓你的行銷想像完美落地", desc: "一站式全方位整合與媒體採購。從概念發想、跨國在地化測試到高階媒體投放，我們助您精準切入亞洲市場，讓想像成真。", btnContact: "立即聯絡我們", btnPortfolio: "觀看成功案例" },
-        whyUs: { 
+        video: { title: "公司形象影片", desc: "看看我們如何將創意化為行動，讓品牌在市場上精準發聲。" },
+        whyUs: {
           title: "為什麼各大品牌選擇 ACT MEDIA？", desc: "直擊品牌痛點，提供高彈性、跨地域與無縫整合的解決方案。",
           cards: [
             { title: "需要極速反應？", desc: "外包溝通成本太高？我們擁有<strong>獨立錄音室、直播室與自有製作團隊</strong>，即刻修改不需等，以最高效率與彈性回應您的需求。" },
@@ -35,25 +35,16 @@
         services: {
           title: "全方位整合服務", desc: "透過圖示化分類，找到最適合您當前階段的行銷利器。", btnQuote: "索取客製化服務報價",
           cards: [
-            { title: "數位行銷 Digital Marketing", desc: "SEO/SEM 優化、社群媒體經營 (FB/IG)、小紅書戰略推廣、網紅 KOL 及 YouTuber 精準合作對接。" },
-            { title: "戶外與線下廣告 OOH", desc: "港鐵、巴士、電車車體廣告，大型戶外 LED 螢幕採購，以及實體路演 (Roadshow) 企劃執行。" },
-            { title: "創意與影音製作 Creative", desc: "商業廣告設計、本土化影音拍攝製作、電視廣告 (TVC) 統籌與專業文案翻譯服務。" },
-            { title: "公關與活動策劃 PR & Event", desc: "大型品牌發表會、電競比賽籌辦、粉絲見面會統籌，以及專業新聞稿發布與媒體公關操作。" },
-            { title: "網站設計 Website Design", desc: "企業形象網站建置、電商平台開發、SEO 架構優化以及穩定的後台系統技術支援。" }
+            { title: "動態廣告 TVC", desc: "電視廣告統籌製作、商業影片拍攝、本土化影音製作與專業文案翻譯服務。" },
+            { title: "戶外廣告 OOH", desc: "港鐵、巴士、電車車體廣告，大型戶外 LED 螢幕採購，以及實體路演企劃執行。" },
+            { title: "活動及展覽 Event", desc: "大型品牌發表會、電競比賽籌辦、粉絲見面會統籌，以及展覽攤位設計佈置。" },
+            { title: "KOL 行銷", desc: "港台 KOL 及主播精準合作對接，直播推廣、社群操作，涵蓋遊戲、美妝、生活等各類型。" },
+            { title: "平面設計 Design", desc: "Banner 設計、印刷品製作、Logo 設計、活動美術設計及專業攝影服務。" }
           ]
         },
         portfolio: {
           title: "實力見證：成功案例", desc: "跨足遊戲推廣、快消品、大型活動等多元產業，展現全方位整合實力。",
-          filters: { all: "全部作品", game: "遊戲與娛樂推廣", fmcg: "快消與餐飲品牌", event: "實體活動與展會", web: "網站與數位設計" },
-          items: [
-            { id: 1, title: 'PUBG Mobile (絕地求生)', desc: '東南亞與越南市場直播推廣及精華影片剪輯' },
-            { id: 2, title: '遊戲王 CROSS DUEL', desc: '動漫節千人實體活動統籌與網紅合作推廣' },
-            { id: 3, title: '王國紀元 Lords Mobile', desc: '台港知名網紅遊戲直播操作與深度公會社群經營' },
-            { id: 4, title: '老虎堂 Tiger Sugar', desc: '台灣知名黑糖珍珠奶茶品牌跨國推廣與視覺行銷' },
-            { id: 5, title: 'LiHO 里喝', desc: '新馬最大連鎖茶飲品牌社群推廣，粉絲專頁人數突破十萬' },
-            { id: 6, title: 'GERMAGIC', desc: '長效防疫殺菌塗層品牌網站設計與線上數位行銷' },
-            { id: 7, title: '老協珍', desc: '知名保健食品品牌代言人全方位整合推廣' }
-          ],
+          filters: { all: "全部作品", tvc: "動態廣告", ooh: "戶外廣告", event: "活動及展覽", kol: "KOL", design: "平面設計" },
           logoTitle: "合作客戶與信賴品牌"
         },
         about: {
@@ -67,10 +58,9 @@
         },
         contact: {
           title: "準備好讓想像成真了嗎？", desc: "留下您的需求，我們的專業團隊將在 24 小時內與您聯繫，提供專屬的整合行銷提案。",
-          hq: "香港總部 (HQ)", hqAddr: "香港九龍觀塘道332號官塘工業中心",
           tw: "台灣辦公室", twAddr: "台北市大安區信義路四段380號3樓",
           formTitle: "立即索取提案", company: "公司名稱 *", companyPh: "請輸入貴公司名稱", name: "聯絡人姓名 *", namePh: "怎麼稱呼您？", email: "電子郵件 *", emailPh: "your@email.com", phone: "聯絡電話", phonePh: "請輸入聯絡電話",
-          service: "需求服務類型 *", servicePh: "請選擇主要需求...", services: ["數位行銷與社群經營", "戶外與線下廣告", "影音拍攝與創意製作", "公關與活動策劃", "網站設計與開發", "全方位整合方案"],
+          service: "需求服務類型 *", servicePh: "請選擇主要需求...", services: ["動態廣告製作", "戶外與線下廣告", "活動及展覽策劃", "KOL 行銷合作", "平面設計服務", "全方位整合方案"],
           budget: "預算範圍", budgetPh: "請選擇預估預算...", budgets: ["HKD $50,000 以下", "HKD $50,000 - $150,000", "HKD $150,000 - $500,000", "HKD $500,000 以上", "尚未決定 / 需討論"],
           note: "補充說明", notePh: "簡單描述您的專案目標或目前遇到的行銷挑戰...", btnSubmit: "送出詢價", btnAi: "AI 優化說明"
         },
@@ -79,7 +69,8 @@
       en: {
         nav: { home: "Home", whyUs: "Why Us", services: "Services", portfolio: "Portfolio", about: "About", contact: "Get a Quote" },
         hero: { tag: "The Action Agency", title1: "Action Agency", title2: "Bringing Your Marketing Imagination to Life", desc: "One-stop integration & media buying. From concept ideation and cross-border localization testing to high-end media placement, we help you penetrate the Asian market.", btnContact: "Contact Us Now", btnPortfolio: "View Our Work" },
-        whyUs: { 
+        video: { title: "Corporate Video", desc: "See how we turn creativity into action, helping brands communicate precisely in the market." },
+        whyUs: {
           title: "Why Top Brands Choose ACT MEDIA?", desc: "Directly addressing brand pain points with high flexibility, cross-regional reach, and seamless integration.",
           cards: [
             { title: "Need Lightning-Fast Response?", desc: "Outsourcing communication costs too high? We have <strong>independent recording studios, live-streaming rooms, and in-house production teams</strong> to respond to your needs with maximum efficiency." },
@@ -90,25 +81,16 @@
         services: {
           title: "End-to-End Services", desc: "Find the best marketing tools suited for your current stage.", btnQuote: "Request a Custom Quote",
           cards: [
-            { title: "Digital Marketing", desc: "SEO/SEM optimization, social media management (FB/IG), Xiaohongshu promotion, and precise KOL/YouTuber matchmaking." },
+            { title: "TVC Production", desc: "TV commercial production, video shooting, localized video production, and professional copywriting/translation." },
             { title: "OOH & Offline Advertising", desc: "MTR, bus, and tram body advertising, large outdoor LED screen procurement, and physical roadshow execution." },
-            { title: "Creative & Video Production", desc: "Commercial advertising design, localized video shooting, TVC coordination, and professional copywriting/translation." },
-            { title: "PR & Event Planning", desc: "Large-scale brand launches, esports tournaments, fan meetings, press releases, and media PR operations." },
-            { title: "Website Design", desc: "Corporate image website building, e-commerce development, SEO architecture, and backend technical support." }
+            { title: "Event & Exhibition", desc: "Large-scale brand launches, esports tournaments, fan meetings, and exhibition booth design." },
+            { title: "KOL Marketing", desc: "HK & TW KOL and streamer matchmaking, live streaming promotion covering gaming, beauty, lifestyle and more." },
+            { title: "Graphic Design", desc: "Banner design, print materials, logo design, event art direction, and professional photography." }
           ]
         },
         portfolio: {
           title: "Proven Track Record", desc: "Spanning across gaming, FMCG, and large-scale events, showcasing our all-around integration capabilities.",
-          filters: { all: "All Work", game: "Gaming & Entertainment", fmcg: "FMCG & F&B", event: "Physical Events", web: "Web & Digital" },
-          items: [
-            { id: 1, title: 'PUBG Mobile', desc: 'Southeast Asia and Vietnam market live streaming promotion and highlight video editing.' },
-            { id: 2, title: 'Yu-Gi-Oh! CROSS DUEL', desc: 'Animation festival thousand-people physical event coordination and KOL promotion.' },
-            { id: 3, title: 'Lords Mobile', desc: 'TW/HK top KOL game streaming operations and deep guild community management.' },
-            { id: 4, title: 'Tiger Sugar', desc: 'Taiwan\'s famous brown sugar boba brand cross-border promotion and visual marketing.' },
-            { id: 5, title: 'LiHO', desc: 'Singapore & Malaysia\'s largest tea brand social media promotion, breaking 100k followers.' },
-            { id: 6, title: 'GERMAGIC', desc: 'Long-lasting anti-epidemic coating brand website design and online digital marketing.' },
-            { id: 7, title: 'Lao Xie Zhen', desc: 'Famous health food brand spokesperson all-around integrated promotion.' }
-          ],
+          filters: { all: "All Work", tvc: "TVC", ooh: "OOH", event: "Events", kol: "KOL", design: "Design" },
           logoTitle: "Trusted By"
         },
         about: {
@@ -122,16 +104,41 @@
         },
         contact: {
           title: "Ready to make it happen?", desc: "Leave us your requirements, and our professional team will contact you within 24 hours with a customized proposal.",
-          hq: "Hong Kong HQ", hqAddr: "Kwun Tong Industrial Centre, 332 Kwun Tong Rd, Kowloon",
-          tw: "Taiwan Office", twAddr: "3F., No. 380, Sec. 4, Xinyi Rd., Da’an Dist., Taipei City",
+          tw: "Taiwan Office", twAddr: "3F., No. 380, Sec. 4, Xinyi Rd., Da'an Dist., Taipei City",
           formTitle: "Request a Proposal", company: "Company Name *", companyPh: "Enter your company name", name: "Contact Name *", namePh: "How should we address you?", email: "Email Address *", emailPh: "your@email.com", phone: "Phone Number", phonePh: "Enter phone number",
-          service: "Required Service *", servicePh: "Select a service...", services: ["Digital Marketing & Social", "OOH & Offline Ads", "Video & Creative Production", "PR & Event Planning", "Website Design & Dev", "Full-Service Integration"],
+          service: "Required Service *", servicePh: "Select a service...", services: ["TVC Production", "OOH & Offline Ads", "Event & Exhibition", "KOL Marketing", "Graphic Design", "Full-Service Integration"],
           budget: "Budget Range", budgetPh: "Select estimated budget...", budgets: ["Below HKD $50,000", "HKD $50,000 - $150,000", "HKD $150,000 - $500,000", "Above HKD $500,000", "To be discussed"],
           note: "Additional Notes", notePh: "Briefly describe your project goals or marketing challenges...", btnSubmit: "Submit Request", btnAi: "AI Enhance"
         },
         footer: "ACT MEDIA Co., Ltd. All Rights Reserved.", fab: "Live Chat"
       }
     };
+
+    const portfolioData = [
+      { id:1, category:'tvc', titleZh:'老協珍', titleEn:'Lao Xie Zhen', descZh:'知名保健食品品牌代言人全方位整合推廣，電視廣告製作統籌。', descEn:'Integrated TVC production for a famous health food brand spokesperson campaign.', image:'https://static.wixstatic.com/media/7263b1_8a1d1e3c799f48dc8ebc9a74ebf635ec~mv2.jpg/v1/crop/x_155,y_0,w_1611,h_1080/fill/w_432,h_289,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%E3%80%90%E8%80%81%E5%8D%94%E7%8F%8D%E3%80%91%E4%BA%BA%E8%94%98%E7%B2%BE(%E7%B2%B5%E8%AA%9E)_TVCF_%E9%83%AD%E5%AF%8C%E5%9F%8E_20_s(%E5%A4%A7%E6%AA%94).jpg' },
+      { id:2, category:'tvc', titleZh:'崩壞3rd', titleEn:'Honkai Impact 3rd', descZh:'多版本電視廣告製作，覆蓋 TVB、myTV SUPER、ViuTV 等各大頻道。', descEn:'Multi-version TVC production across TVB, myTV SUPER and ViuTV.', image:'https://static.wixstatic.com/media/7263b1_b2b0ad892b664d898df7f64907e64841~mv2.jpg/v1/crop/x_155,y_0,w_1611,h_1080/fill/w_432,h_289,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/30s_mytvsuper_%E9%AB%98%E6%B8%85%E7%89%88.jpg' },
+      { id:3, category:'tvc', titleZh:'凱薩 Kaiser', titleEn:'Kaiser', descZh:'韓國 3D 城戰 MMORPG 手遊電視廣告製作及媒體投放。', descEn:'TVC production and media placement for Korean 3D MMORPG mobile game.', image:'https://static.wixstatic.com/media/7263b1_26b17792c23643c4b5e368a0f9f3e600~mv2.jpg/v1/crop/x_118,y_0,w_1612,h_1080/fill/w_432,h_289,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Kaiser.jpg' },
+      { id:4, category:'tvc', titleZh:'神魔之塔 X 陳妍希', titleEn:'Magic Tower X Michelle Chen', descZh:'神魔之塔代言人宣傳廣告製作，陳妍希主演。', descEn:'Brand ambassador TVC featuring Michelle Chen.', image:'https://static.wixstatic.com/media/cb47a2_a27527b085c649bcaaf76cf80268c0b1~mv2.jpg/v1/crop/x_74,y_0,w_819,h_549/fill/w_432,h_289,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/demo.jpg' },
+      { id:5, category:'tvc', titleZh:'怪物彈珠 X 渡邊直美', titleEn:'Monster Strike X Naomi Watanabe', descZh:'怪物彈珠代言人宣傳廣告製作，渡邊直美主演。', descEn:'Brand ambassador TVC featuring Naomi Watanabe.', image:'https://static.wixstatic.com/media/7263b1_d067d8ca6bbd456193b27ac96359bb64~mv2.jpg/v1/crop/x_23,y_0,w_1611,h_1080/fill/w_432,h_289,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%E6%80%AA%E7%89%A9%E5%BD%88%E7%8F%A0-X-%E6%B8%A1%E9%82%8A%E7%9B%B4%E7%BE%8E_edited.jpg' },
+      { id:6, category:'tvc', titleZh:'冠軍人馬', titleEn:'Champion Horse Racing', descZh:'新一代賽馬遊戲電視廣告製作及媒體投放。', descEn:'TVC production and media placement for champion horse racing game.', image:'https://static.wixstatic.com/media/7263b1_206c61ddd5844012a56816afee001bd7~mv2.jpg/v1/crop/x_237,y_0,w_1612,h_1080/fill/w_432,h_289,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%E5%86%A0%E8%BB%8D%E4%BA%BA%E9%A6%AC.jpg' },
+      { id:7, category:'ooh', titleZh:'French May 2023', titleEn:'French May 2023', descZh:'亞洲最大型法國文化節，港鐵及戶外大型廣告全面投放。', descEn:'Asia largest French cultural festival — full MTR and large-format OOH placement.', image:'https://static.wixstatic.com/media/7263b1_e0a18f4e4aef426fbb30144091762b7b~mv2.jpg/v1/fill/w_358,h_212,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/FM%20Logos%20Design%20Files-01.jpg' },
+      { id:8, category:'ooh', titleZh:'魔戒：開戰時刻', titleEn:'Lord of the Rings: Rise to War', descZh:'魔戒官方授權手遊，香港全面戶外廣告推廣。', descEn:'Official LOTR mobile game — comprehensive HK outdoor advertising campaign.', image:'https://static.wixstatic.com/media/7263b1_29dc89c57b394cc4859ab0a9659fc6d8~mv2.jpg/v1/fill/w_358,h_212,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo.jpg' },
+      { id:9, category:'ooh', titleZh:'中信銀行', titleEn:'CITIC Bank', descZh:'香港百年商業銀行，大型戶外廣告及交通媒體投放。', descEn:'Century-old HK commercial bank — large-scale OOH and transit media placement.', image:'https://static.wixstatic.com/media/7263b1_652c795edc834ebfafb18b675951b6ae~mv2.jpg/v1/fill/w_358,h_212,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo2.jpg' },
+      { id:10, category:'ooh', titleZh:'17直播', titleEn:'17LIVE', descZh:'台灣知名直播平台，港鐵、巴士及大型戶外廣告全面投放。', descEn:'Taiwan leading live streaming platform — full MTR, bus and large OOH campaign in HK.', image:'https://static.wixstatic.com/media/cb47a2_2dfbd0b1023a4261b80eb06e1f0c3655~mv2.webp/v1/fill/w_358,h_212,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/e0605d_62eb0aa1b4b74debbcb9e50e08c73b14_mv2.webp' },
+      { id:11, category:'ooh', titleZh:'madhead X BIGBANG', titleEn:'madhead X BIGBANG', descZh:'神魔之塔 X BIGBANG 代言，全港大型交通媒體廣告。', descEn:'Magic Tower X BIGBANG ambassador campaign — full HK transit media coverage.', image:'https://static.wixstatic.com/media/cb47a2_90d57bcfc9a243e0b63016fcc0dacfe1~mv2.webp/v1/fill/w_358,h_212,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/e0605d_bfb58b67c80542f089cf7b36b641b545_mv2.webp' },
+      { id:12, category:'ooh', titleZh:'Supercell 部落衝突', titleEn:'Clash of Clans', descZh:'全港交通工具大規模廣告投放，造成一片黃色熱潮。', descEn:'Massive transit advertising across all HK transport, creating a yellow wave sensation.', image:'https://static.wixstatic.com/media/cb47a2_c303ccecbdd24088bb81d4e0227aed00~mv2.webp/v1/fill/w_358,h_212,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/e0605d_d4207237c56f4c42861107022a0bd66f_mv2.webp' },
+      { id:13, category:'event', titleZh:'甜物之境畫展 2025', titleEn:'Sweet World Art Exhibition 2025', descZh:'由香港插畫師協會、ACT MEDIA 和 Incubase 共同主辦的插畫展。', descEn:'Illustration exhibition co-organized by HKIA, ACT MEDIA and Incubase.', image:'https://static.wixstatic.com/media/7263b1_fa83a6c051a642bf82dcd62eac2e11ed~mv2.png/v1/fill/w_358,h_212,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/web%20cover-09.png' },
+      { id:14, category:'event', titleZh:'RO 仙境傳說 6 周年 2023', titleEn:'RO: Guardians of Eternal Love 6th Anniversary', descZh:'香港維多利亞港海上 6 周年慶典，港澳台玩家聚會活動。', descEn:'Harbour anniversary event gathering players from HK, Macau and Taiwan.', image:'https://static.wixstatic.com/media/7263b1_b3064aa8e771457588f8f89544bfd067~mv2.png/v1/fill/w_358,h_212,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/web%20cover-06.png' },
+      { id:15, category:'event', titleZh:'PUBG 馬來西亞全球總決賽 2019', titleEn:'PUBG Global Finals Malaysia 2019', descZh:'PUBG 馬來西亞秋季全球總決賽活動執行與推廣。', descEn:'PUBG Global Invitational Finals execution and promotion in Malaysia.', image:'https://static.wixstatic.com/media/7263b1_9f20658e8b52445d9305a5396a71f99d~mv2.png/v1/fill/w_358,h_212,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/web%20cover-05.png' },
+      { id:16, category:'event', titleZh:'Dream Championship 2019', titleEn:'Dream Championship 2019', descZh:'足球小將翼電競賽事，旺角 CGA Stadium 現場直播。', descEn:'Captain Tsubasa esports championship with live commentary at Mong Kok CGA Stadium.', image:'https://static.wixstatic.com/media/cb47a2_ceb4745187304a078f9c1c4d14c6ba3a~mv2.jpg/v1/fill/w_358,h_212,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/e0605d_eaaec0d00d1c4b30abf1c9d25c4903d0_mv2_d_4464_2976_s_4_2.jpg' },
+      { id:17, category:'event', titleZh:'動漫節 ROG X 第五人格 2023', titleEn:'ACGHK ROG X Identity V 2023', descZh:'香港動漫節 ROG Phone 聯動第五人格粉絲派對，KOL 對決、Cosplay 等多元活動。', descEn:'ROG Phone X Identity V fan party at ACGHK with KOL battles and cosplay events.', image:'https://static.wixstatic.com/media/7263b1_15a2a74bbc6241ea8cdaaa0931047352~mv2.png/v1/fill/w_358,h_212,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/web%20cover-04.png' },
+      { id:18, category:'event', titleZh:'17LIVE 澳門活動 2019', titleEn:'17LIVE Macau Event 2019', descZh:'17直播 X B.Duck 時裝派對，澳門新濠天地 Club Cubic，十位主播走秀。', descEn:'17LIVE X B.Duck fashion party at Club Cubic, City of Dreams Macau.', image:'https://static.wixstatic.com/media/cb47a2_2dfbd0b1023a4261b80eb06e1f0c3655~mv2.webp/v1/fill/w_358,h_212,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/e0605d_62eb0aa1b4b74debbcb9e50e08c73b14_mv2.webp' },
+      { id:19, category:'kol', titleZh:'多莉多莉 X 聖境傳說', titleEn:'Doriedorie X Sacred Sword', descZh:'香港知名 KOL 多莉多莉遊戲直播合作推廣。', descEn:'HK top KOL Doriedorie gaming live stream collaboration.', image:'https://static.wixstatic.com/media/7263b1_cda25359875d4ca08ca49b74dbb84020~mv2.png/v1/fill/w_360,h_211,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Screenshot%202024-07-10%20at%2011_35_19%E2%80%AFAM.png' },
+      { id:20, category:'kol', titleZh:'台灣 KOL 聯合推廣', titleEn:'Taiwan Multi-KOL Campaign', descZh:'台灣多位知名 KOL 及主播聯合推廣，涵蓋遊戲、生活各類型。', descEn:'Multi-KOL campaign featuring Taiwan streamers across gaming and lifestyle.', image:'https://static.wixstatic.com/media/7263b1_a2473561928e45d1a03dccafed3c3051~mv2.png/v1/fill/w_240,h_320,q_90,enc_avif,quality_auto/7263b1_a2473561928e45d1a03dccafed3c3051~mv2.png' },
+      { id:21, category:'design', titleZh:'Banner 設計', titleEn:'Banner Design', descZh:'為各大品牌構思文案及圖像設計，涵蓋社群、網頁橫幅等。', descEn:'Copywriting and visual design for social media and web banners.', image:'https://static.wixstatic.com/media/7263b1_dbaddafdd8a14c5d9c08da26139e0adf~mv2.jpg/v1/fit/w_200,h_200,q_90,enc_avif,quality_auto/7263b1_dbaddafdd8a14c5d9c08da26139e0adf~mv2.jpg' },
+      { id:22, category:'design', titleZh:'Logo 設計', titleEn:'Logo Design', descZh:'由意念出發，為各類商業品牌度身設計 Logo，涵蓋酒店、學校、餐廳等。', descEn:'Custom logo design for hotels, schools, restaurants and commercial brands.', image:'https://static.wixstatic.com/media/7263b1_81d79546ae2e4d52a9d191c4e016fbaf~mv2.png/v1/fit/w_200,h_200,q_90,enc_avif,quality_auto/7263b1_81d79546ae2e4d52a9d191c4e016fbaf~mv2.png' },
+      { id:23, category:'design', titleZh:'活動美術設計', titleEn:'Event Design', descZh:'各類展覽攤位、場地佈置設計，包括背景板、宣傳單張等。', descEn:'Exhibition booth, backdrop and venue decoration design for various events.', image:'https://static.wixstatic.com/media/7263b1_b1b93adf7566451b900da75383fb4dae~mv2.jpg/v1/fit/w_200,h_200,q_90,enc_avif,quality_auto/7263b1_b1b93adf7566451b900da75383fb4dae~mv2.jpg' },
+    ];
 
     const App = () => {
       const [lang, setLang] = useState('zh');
@@ -147,76 +154,48 @@
           const res = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              model: 'claude-sonnet-4-20250514',
-              max_tokens: 1000,
-              messages: [{ role: 'user', content: `請將以下行銷需求說明改寫得更完整、專業，保留原意，約100字：\n${formData.notes}` }]
-            })
+            body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role: 'user', content: "請將以下行銷需求說明改寫得更完整、專業，保留原意，約100字：\n" + formData.notes }] })
           });
           const data = await res.json();
           const text = data.content?.find(b => b.type === 'text')?.text || formData.notes;
           setFormData({ notes: text });
-        } catch (e) {
-          console.error(e);
-        }
+        } catch (e) { console.error(e); }
         setIsExpandingNotes(false);
       };
 
       const t = dict[lang];
-
-      const portfolioItems = [
-        { ...t.portfolio.items[0], category: 'game', image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800' },
-        { ...t.portfolio.items[1], category: 'event', image: 'https://images.unsplash.com/photo-1605901309584-818e25960b8f?auto=format&fit=crop&q=80&w=800' },
-        { ...t.portfolio.items[2], category: 'game', image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=800' },
-        { ...t.portfolio.items[3], category: 'fmcg', image: 'https://images.unsplash.com/photo-1558855567-1a440618ff81?auto=format&fit=crop&q=80&w=800' },
-        { ...t.portfolio.items[4], category: 'fmcg', image: 'https://images.unsplash.com/photo-1576092762791-dd9e2220afa1?auto=format&fit=crop&q=80&w=800' },
-        { ...t.portfolio.items[5], category: 'web', image: 'https://images.unsplash.com/photo-1584308666744-24d5e478ac69?auto=format&fit=crop&q=80&w=800' },
-        { ...t.portfolio.items[6], category: 'fmcg', image: 'https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?auto=format&fit=crop&q=80&w=800' },
-      ];
-
-      const filteredPortfolio = activeFilter === 'all' ? portfolioItems : portfolioItems.filter(item => item.category === activeFilter);
+      const filteredPortfolio = activeFilter === 'all' ? portfolioData : portfolioData.filter(item => item.category === activeFilter);
       const toggleLang = () => setLang(lang === 'zh' ? 'en' : 'zh');
 
       return (
         <div className="font-sans text-slate-800 bg-white">
-          {/* Navigation */}
           <nav className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50 transition-all">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center h-20">
                 <div className="flex-shrink-0 flex items-center cursor-pointer">
-                  <span className="text-2xl font-black tracking-tighter text-slate-900">
-                    ACT<span className="text-orange-600">MEDIA</span>
-                  </span>
+                  <span className="text-2xl font-black tracking-tighter text-slate-900">ACT<span className="text-orange-600">MEDIA</span></span>
                 </div>
-                
                 <div className="hidden md:flex space-x-8 items-center">
                   <a href="#home" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">{t.nav.home}</a>
                   <a href="#why-us" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">{t.nav.whyUs}</a>
                   <a href="#services" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">{t.nav.services}</a>
                   <a href="#portfolio" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">{t.nav.portfolio}</a>
                   <a href="#about" className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">{t.nav.about}</a>
-                  <button onClick={toggleLang} className="text-sm font-bold text-slate-800 hover:text-orange-600 border px-3 py-1 rounded-md transition-colors">
-                    {lang === 'zh' ? 'EN' : '中文'}
-                  </button>
-                  <a href="#contact" className="px-6 py-2.5 bg-orange-600 text-white text-sm font-medium rounded-full hover:bg-orange-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                    {t.nav.contact}
-                  </a>
+                  <button onClick={toggleLang} className="text-sm font-bold text-slate-800 hover:text-orange-600 border px-3 py-1 rounded-md transition-colors">{lang === 'zh' ? 'EN' : '中文'}</button>
+                  <a href="#contact" className="px-6 py-2.5 bg-orange-600 text-white text-sm font-medium rounded-full hover:bg-orange-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">{t.nav.contact}</a>
                 </div>
-
                 <div className="md:hidden flex items-center gap-4">
-                  <button onClick={toggleLang} className="text-sm font-bold text-slate-800 border px-2 py-1 rounded-md">
-                    {lang === 'zh' ? 'EN' : '中'}
-                  </button>
+                  <button onClick={toggleLang} className="text-sm font-bold text-slate-800 border px-2 py-1 rounded-md">{lang === 'zh' ? 'EN' : '中'}</button>
                   <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-slate-600 hover:text-orange-600">
                     {isMenuOpen ? <i className="fa-solid fa-xmark text-[24px]"></i> : <i className="fa-solid fa-bars text-[24px]"></i>}
                   </button>
                 </div>
               </div>
             </div>
-
             {isMenuOpen && (
               <div className="md:hidden bg-white border-t">
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                  <a href="#home" className="block px-3 py-2 text-base font-medium text-slate-600">{t.nav.home}</a>
                   <a href="#services" className="block px-3 py-2 text-base font-medium text-slate-600">{t.nav.services}</a>
                   <a href="#portfolio" className="block px-3 py-2 text-base font-medium text-slate-600">{t.nav.portfolio}</a>
                   <a href="#contact" className="block px-3 py-2 text-base font-medium text-orange-600">{t.nav.contact}</a>
@@ -225,73 +204,62 @@
             )}
           </nav>
 
-          {/* Hero Section */}
           <section id="home" className="relative pt-20 pb-32 lg:pt-32 lg:pb-48 overflow-hidden bg-slate-900">
             <div className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1558442074-3c19857bc1dc?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center mix-blend-overlay"></div>
             <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent"></div>
-            
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
               <div className="max-w-3xl">
-                <div className="inline-block px-4 py-1.5 rounded-full bg-orange-500/20 text-orange-400 font-semibold text-sm mb-6 border border-orange-500/30">
-                  {t.hero.tag}
-                </div>
+                <div className="inline-block px-4 py-1.5 rounded-full bg-orange-500/20 text-orange-400 font-semibold text-sm mb-6 border border-orange-500/30">{t.hero.tag}</div>
                 <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight mb-6">
                   {t.hero.title1}<br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
-                    {t.hero.title2}
-                  </span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">{t.hero.title2}</span>
                 </h1>
-                <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl leading-relaxed">
-                  {t.hero.desc}
-                </p>
+                <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl leading-relaxed">{t.hero.desc}</p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a href="#contact" className="inline-flex justify-center items-center px-8 py-4 text-base font-bold rounded-full text-white bg-orange-600 hover:bg-orange-700 transition-all shadow-lg hover:shadow-orange-600/30">
-                    {t.hero.btnContact}
-                    <i className="fa-solid fa-chevron-right ml-2 text-[20px]"></i>
+                    {t.hero.btnContact}<i className="fa-solid fa-chevron-right ml-2 text-[20px]"></i>
                   </a>
-                  <a href="#portfolio" className="inline-flex justify-center items-center px-8 py-4 text-base font-bold rounded-full text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all border border-white/20">
-                    {t.hero.btnPortfolio}
-                  </a>
+                  <a href="#portfolio" className="inline-flex justify-center items-center px-8 py-4 text-base font-bold rounded-full text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all border border-white/20">{t.hero.btnPortfolio}</a>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Why Choose Us */}
+          <section id="video" className="py-20 bg-slate-900 border-t border-slate-800">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-10">
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t.video.title}</h2>
+                <p className="text-slate-400 text-lg">{t.video.desc}</p>
+              </div>
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black aspect-video">
+                <video className="w-full h-full object-contain" controls playsInline preload="metadata">
+                  <source src="actmedia_website_v3.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+          </section>
+
           <section id="why-us" className="py-24 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center max-w-3xl mx-auto mb-16">
                 <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t.whyUs.title}</h2>
                 <p className="text-slate-600 text-lg">{t.whyUs.desc}</p>
               </div>
-
               <div className="grid md:grid-cols-3 gap-8">
-                <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow border border-slate-100 group">
-                  <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <i className="fa-solid fa-rocket text-orange-600 text-[28px]"></i>
+                {[{ icon: "fa-rocket", color: "orange", i: 0 }, { icon: "fa-globe", color: "blue", i: 1 }, { icon: "fa-layer-group", color: "purple", i: 2 }].map(card => (
+                  <div key={card.i} className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow border border-slate-100 group">
+                    <div className={`w-14 h-14 bg-${card.color}-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                      <i className={`fa-solid ${card.icon} text-${card.color}-600 text-[28px]`}></i>
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">{t.whyUs.cards[card.i].title}</h3>
+                    <p className="text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{__html: t.whyUs.cards[card.i].desc}}></p>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">{t.whyUs.cards[0].title}</h3>
-                  <p className="text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{__html: t.whyUs.cards[0].desc}}></p>
-                </div>
-                <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow border border-slate-100 group">
-                  <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <i className="fa-solid fa-globe text-blue-600 text-[28px]"></i>
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">{t.whyUs.cards[1].title}</h3>
-                  <p className="text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{__html: t.whyUs.cards[1].desc}}></p>
-                </div>
-                <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow border border-slate-100 group">
-                  <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <i className="fa-solid fa-layer-group text-purple-600 text-[28px]"></i>
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">{t.whyUs.cards[2].title}</h3>
-                  <p className="text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{__html: t.whyUs.cards[2].desc}}></p>
-                </div>
+                ))}
               </div>
             </div>
           </section>
 
-          {/* Services */}
           <section id="services" className="py-24 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="mb-16 md:flex md:justify-between md:items-end">
@@ -303,12 +271,8 @@
                   {t.services.btnQuote} <i className="fa-solid fa-chevron-right text-[16px] ml-1"></i>
                 </a>
               </div>
-
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[
-                  { icon: "fa-mobile-screen", i: 0 }, { icon: "fa-map", i: 1 }, 
-                  { icon: "fa-video", i: 2 }, { icon: "fa-microphone", i: 3 }, { icon: "fa-table-columns", i: 4 }
-                ].map((item) => (
+                {[{ icon: "fa-film", i: 0 }, { icon: "fa-map", i: 1 }, { icon: "fa-calendar-star", i: 2 }, { icon: "fa-users", i: 3 }, { icon: "fa-pen-ruler", i: 4 }].map(item => (
                   <div key={item.i} className="p-6 border border-slate-100 rounded-2xl hover:border-orange-200 hover:bg-orange-50/30 transition-colors">
                     <i className={`fa-solid ${item.icon} text-[40px] text-slate-700 mb-4`}></i>
                     <h4 className="text-lg font-bold text-slate-900 mb-2">{t.services.cards[item.i].title}</h4>
@@ -319,66 +283,48 @@
             </div>
           </section>
 
-          {/* Portfolio */}
           <section id="portfolio" className="py-24 bg-slate-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
                 <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t.portfolio.title}</h2>
                 <p className="text-slate-600 text-lg">{t.portfolio.desc}</p>
               </div>
-
               <div className="flex flex-wrap justify-center gap-3 mb-12">
                 {[
                   { id: 'all', label: t.portfolio.filters.all },
-                  { id: 'game', label: t.portfolio.filters.game },
-                  { id: 'fmcg', label: t.portfolio.filters.fmcg },
+                  { id: 'tvc', label: t.portfolio.filters.tvc },
+                  { id: 'ooh', label: t.portfolio.filters.ooh },
                   { id: 'event', label: t.portfolio.filters.event },
-                  { id: 'web', label: t.portfolio.filters.web },
+                  { id: 'kol', label: t.portfolio.filters.kol },
+                  { id: 'design', label: t.portfolio.filters.design },
                 ].map(filter => (
-                  <button
-                    key={filter.id}
-                    onClick={() => setActiveFilter(filter.id)}
-                    className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
-                      activeFilter === filter.id 
-                        ? 'bg-slate-900 text-white shadow-md' 
-                        : 'bg-white text-slate-600 hover:bg-slate-200 border border-slate-200'
-                    }`}
-                  >
+                  <button key={filter.id} onClick={() => setActiveFilter(filter.id)}
+                    className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${activeFilter === filter.id ? 'bg-slate-900 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-200 border border-slate-200'}`}>
                     {filter.label}
                   </button>
                 ))}
               </div>
-
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredPortfolio.map(item => (
-                  <div key={item.id} className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100">
+                  <div key={item.id} className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100 fade-in">
                     <div className="h-48 flex items-center justify-center relative overflow-hidden bg-slate-100">
-                      <img src={item.image} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                      <img src={item.image} alt={lang === 'zh' ? item.titleZh : item.titleEn} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                       <div className="absolute inset-0 bg-slate-900/20 group-hover:bg-transparent transition-colors duration-500"></div>
+                      <div className="absolute top-3 right-3">
+                        <span className="px-2 py-1 bg-orange-600/90 text-white text-xs font-bold rounded-full uppercase">{item.category}</span>
+                      </div>
                     </div>
                     <div className="p-6">
-                      <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-orange-600 transition-colors">{item.title}</h3>
-                      <p className="text-slate-600 text-sm line-clamp-2">{item.desc}</p>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-orange-600 transition-colors">{lang === 'zh' ? item.titleZh : item.titleEn}</h3>
+                      <p className="text-slate-600 text-sm line-clamp-2">{lang === 'zh' ? item.descZh : item.descEn}</p>
                     </div>
                   </div>
                 ))}
               </div>
-
               <div className="mt-24 pt-16 border-t border-slate-200">
                 <p className="text-center text-sm font-semibold text-slate-500 tracking-wider mb-8 uppercase">{t.portfolio.logoTitle}</p>
-                <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 transition-all duration-500">
-                  {[
-                    { src: 'logos/c1.jpg', alt: '中信銀行' },
-                    { src: 'logos/c2.jpg', alt: 'BCT 銀聯集團' },
-                    { src: 'logos/c3.jpg', alt: '道' },
-                    { src: 'logos/c4.jpg', alt: 'ByteDance 字节跳动' },
-                    { src: 'logos/c5.jpg', alt: 'KOMOE' },
-                    { src: 'logos/c6.jpg', alt: '智冠科技' },
-                    { src: 'logos/c7.jpg', alt: '7SENSES' },
-                    { src: 'logos/c8.jpg', alt: 'AIDS CONCERN 關懷愛滋' },
-                    { src: 'logos/c9.jpg', alt: 'Alibaba.com' },
-                    { src: 'logos/c10.jpg', alt: 'efunfun' }
-                  ].map((logo, idx) => (
+                <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+                  {[{ src: 'logos/c1.jpg', alt: '中信銀行' },{ src: 'logos/c2.jpg', alt: 'BCT' },{ src: 'logos/c3.jpg', alt: '道' },{ src: 'logos/c4.jpg', alt: 'ByteDance' },{ src: 'logos/c5.jpg', alt: 'KOMOE' },{ src: 'logos/c6.jpg', alt: '智冠科技' },{ src: 'logos/c7.jpg', alt: '7SENSES' },{ src: 'logos/c8.jpg', alt: 'AIDS CONCERN' },{ src: 'logos/c9.jpg', alt: 'Alibaba.com' },{ src: 'logos/c10.jpg', alt: 'efunfun' }].map((logo, idx) => (
                     <img key={idx} src={logo.src} alt={logo.alt} className="h-10 md:h-14 object-contain opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300" />
                   ))}
                 </div>
@@ -386,7 +332,6 @@
             </div>
           </section>
 
-          {/* About Us */}
           <section id="about" className="py-24 bg-white overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
@@ -396,16 +341,14 @@
                     <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=1000" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent"></div>
                     <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur p-6 rounded-2xl shadow-xl transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                       <p className="font-bold text-slate-900 text-lg mb-1">{t.about.est}</p>
-                       <p className="text-orange-600 font-medium">{t.about.estSub}</p>
+                      <p className="font-bold text-slate-900 text-lg mb-1">{t.about.est}</p>
+                      <p className="text-orange-600 font-medium">{t.about.estSub}</p>
                     </div>
                   </div>
                 </div>
-                
                 <div>
                   <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">{t.about.title}</h2>
                   <p className="text-slate-600 text-lg leading-relaxed mb-8">{t.about.desc}</p>
-                  
                   <div className="space-y-6">
                     {t.about.depts.map((dept, idx) => (
                       <div className="flex" key={idx}>
@@ -422,23 +365,13 @@
             </div>
           </section>
 
-          {/* Contact Us */}
           <section id="contact" className="py-24 bg-slate-900 text-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="lg:grid lg:grid-cols-12 lg:gap-16">
                 <div className="lg:col-span-5 mb-16 lg:mb-0">
                   <h2 className="text-3xl md:text-4xl font-bold mb-6">{t.contact.title}</h2>
                   <p className="text-slate-400 mb-10 text-lg">{t.contact.desc}</p>
-
                   <div className="space-y-8">
-                    <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
-                      <h4 className="text-orange-400 font-bold mb-4 flex items-center">
-                        <i className="fa-solid fa-location-dot text-[20px] mr-2"></i> {t.contact.hq}
-                      </h4>
-                      <p className="text-slate-300 text-sm mb-2">{t.contact.hqAddr}</p>
-                      <p className="text-slate-300 text-sm flex items-center"><i className="fa-solid fa-phone text-[16px] mr-2"></i> +852 3111 2328</p>
-                    </div>
-
                     <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
                       <h4 className="text-orange-400 font-bold mb-4 flex items-center">
                         <i className="fa-solid fa-location-dot text-[20px] mr-2"></i> {t.contact.tw}
@@ -446,14 +379,12 @@
                       <p className="text-slate-300 text-sm mb-2">{t.contact.twAddr}</p>
                       <p className="text-slate-300 text-sm flex items-center"><i className="fa-solid fa-phone text-[16px] mr-2"></i> +886 2 7708 0766</p>
                     </div>
-
                     <div className="flex items-center text-slate-300 hover:text-white transition-colors">
                       <i className="fa-solid fa-envelope text-[20px] mr-3 text-orange-400"></i>
                       <a href="mailto:enquiry@act-m.com" className="text-lg">enquiry@act-m.com</a>
                     </div>
                   </div>
                 </div>
-
                 <div className="lg:col-span-7">
                   <form className="bg-white rounded-3xl p-8 shadow-2xl">
                     <h3 className="text-2xl font-bold text-slate-900 mb-6">{t.contact.formTitle}</h3>
@@ -480,14 +411,14 @@
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">{t.contact.service}</label>
-                        <select className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900 bg-white">
+                        <select className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 outline-none transition-all text-slate-900 bg-white">
                           <option value="">{t.contact.servicePh}</option>
                           {t.contact.services.map((opt, i) => <option key={i} value={i}>{opt}</option>)}
                         </select>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">{t.contact.budget}</label>
-                        <select className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900 bg-white">
+                        <select className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 outline-none transition-all text-slate-900 bg-white">
                           <option value="">{t.contact.budgetPh}</option>
                           {t.contact.budgets.map((opt, i) => <option key={i} value={i}>{opt}</option>)}
                         </select>
@@ -500,7 +431,7 @@
                             {t.contact.btnAi}
                           </button>
                         </div>
-                        <textarea rows="4" value={formData.notes} onChange={(e) => setFormData({ notes: e.target.value })} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-slate-900 resize-none" placeholder={t.contact.notePh}></textarea>
+                        <textarea rows="4" value={formData.notes} onChange={(e) => setFormData({ notes: e.target.value })} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 outline-none transition-all text-slate-900 resize-none" placeholder={t.contact.notePh}></textarea>
                       </div>
                       <button type="button" className="w-full py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-colors shadow-lg hover:shadow-xl">
                         {t.contact.btnSubmit}
@@ -512,12 +443,10 @@
             </div>
           </section>
 
-          {/* Footer */}
           <footer className="bg-slate-950 text-slate-500 py-8 text-center text-sm border-t border-slate-800">
             <p>&copy; {new Date().getFullYear()} {t.footer}</p>
           </footer>
 
-          {/* Floating Action Button */}
           <div className="fixed bottom-6 right-6 z-50 group">
             <button className="bg-green-500 hover:bg-green-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-transform transform hover:scale-110">
               <i className="fa-brands fa-whatsapp text-[28px]"></i>
